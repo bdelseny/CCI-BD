@@ -1,0 +1,8 @@
+spool off
+      *
+ERROR at line 6:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> spool Res1
+

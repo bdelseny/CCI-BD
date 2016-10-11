@@ -1,0 +1,19 @@
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ NOADH                                     NOT NULL NUMBER
+ NOM                                                VARCHAR2(20)
+ PRENOM                                             VARCHAR2(20)
+ ADRESSE                                            VARCHAR2(20)
+ ANNAIS                                             NUMBER(4)
+ DATADH                                             DATE
+
+Donner une annee de naissance : 1960
+Donner le nom de la ville : Gieres
+old   3: 	where adresse = '&laville' and anNais < &lannee
+new   3: 	where adresse = 'Gieres' and anNais < 1960
+
+     NOADH NOM                  PRENOM                                          
+---------- -------------------- --------------------                            
+        10 Scholl               P.-C.                                           
+        11 Carrier              Fabienne                                        
+

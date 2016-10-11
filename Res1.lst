@@ -1,0 +1,7 @@
+SQL> select nomA
+  2  form LesAnimaux
+  3  minus
+  4  select nomA
+  5  from LesMaladies
+  6  spool off
+  7  
