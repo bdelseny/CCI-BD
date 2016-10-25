@@ -1,31 +1,50 @@
+SQL> 	with X as (
+  2  		select nomi, min(dater) as ancDate
+  3  		from repas.lesrepas group by nomi)
+  4  	select nomi, ancDate, nomp, nomv
+  5  	from repas.lemenu M right outer join X on (M.dater=X.ancDate)
+  6  	order by ancDate, nomi;
 
-NOMI                 ANCDATE   NOMP                 NOMV                                                                                                                                                                                                            
--------------------- --------- -------------------- --------------------                                                                                                                                                                                            
-Thomas               21-OCT-03 Mousse chocolat      eau                                                                                                                                                                                                             
-Thomas               21-OCT-03 Ile flottante        eau                                                                                                                                                                                                             
-Thomas               21-OCT-03 Steak hache          Cote de Nuits                                                                                                                                                                                                   
-Thomas               21-OCT-03 Foie gras            Veuve Cliquot                                                                                                                                                                                                   
-Phil                 06-MAR-05 Mousse chocolat      Vasse Felix                                                                                                                                                                                                     
-Phil                 06-MAR-05 Pates beurre         Vasse Felix                                                                                                                                                                                                     
-Jacques              31-DEC-04 Plateau fromages     eau                                                                                                                                                                                                             
-Jacques              31-DEC-04 Mousse chocolat      eau                                                                                                                                                                                                             
-Jacques              31-DEC-04 Medaillon langouste  eau                                                                                                                                                                                                             
-Patrick              31-DEC-04 Plateau fromages     eau                                                                                                                                                                                                             
-Patrick              31-DEC-04 Mousse chocolat      eau                                                                                                                                                                                                             
-Patrick              31-DEC-04 Medaillon langouste  eau                                                                                                                                                                                                             
-Myriam               21-OCT-03 Mousse chocolat      eau                                                                                                                                                                                                             
-Myriam               21-OCT-03 Ile flottante        eau                                                                                                                                                                                                             
-Myriam               21-OCT-03 Steak hache          Cote de Nuits                                                                                                                                                                                                   
-Myriam               21-OCT-03 Foie gras            Veuve Cliquot                                                                                                                                                                                                   
-Malou                31-DEC-04 Plateau fromages     eau                                                                                                                                                                                                             
-Malou                31-DEC-04 Mousse chocolat      eau                                                                                                                                                                                                             
-Malou                31-DEC-04 Medaillon langouste  eau                                                                                                                                                                                                             
-Marie                21-OCT-03 Mousse chocolat      eau                                                                                                                                                                                                             
-Marie                21-OCT-03 Ile flottante        eau                                                                                                                                                                                                             
-Marie                21-OCT-03 Steak hache          Cote de Nuits                                                                                                                                                                                                   
-Marie                21-OCT-03 Foie gras            Veuve Cliquot                                                                                                                                                                                                   
-Jackie               06-MAR-05 Mousse chocolat      Vasse Felix                                                                                                                                                                                                     
-Jackie               06-MAR-05 Pates beurre         Vasse Felix                                                                                                                                                                                                     
+NOMI                 ANCDATE   NOMP                 NOMV                        
+-------------------- --------- -------------------- --------------------        
+Adrian               10-OCT-03                                                  
+Toto                 10-OCT-03                                                  
+Marie                21-OCT-03 Mousse chocolat      eau                         
+Marie                21-OCT-03 Ile flottante        eau                         
+Marie                21-OCT-03 Steak hache          Cote de Nuits               
+Marie                21-OCT-03 Foie gras            Veuve Cliquot               
+Myriam               21-OCT-03 Steak hache          Cote de Nuits               
+Myriam               21-OCT-03 Mousse chocolat      eau                         
+Myriam               21-OCT-03 Ile flottante        eau                         
+Myriam               21-OCT-03 Foie gras            Veuve Cliquot               
+Thomas               21-OCT-03 Mousse chocolat      eau                         
 
-25 rows selected.
+NOMI                 ANCDATE   NOMP                 NOMV                        
+-------------------- --------- -------------------- --------------------        
+Thomas               21-OCT-03 Foie gras            Veuve Cliquot               
+Thomas               21-OCT-03 Steak hache          Cote de Nuits               
+Thomas               21-OCT-03 Ile flottante        eau                         
+Jacques              31-DEC-04 Medaillon langouste  eau                         
+Jacques              31-DEC-04 Mousse chocolat      eau                         
+Jacques              31-DEC-04 Plateau fromages     eau                         
+Malou                31-DEC-04 Medaillon langouste  eau                         
+Malou                31-DEC-04 Plateau fromages     eau                         
+Malou                31-DEC-04 Mousse chocolat      eau                         
+Patrick              31-DEC-04 Mousse chocolat      eau                         
+Patrick              31-DEC-04 Medaillon langouste  eau                         
 
+NOMI                 ANCDATE   NOMP                 NOMV                        
+-------------------- --------- -------------------- --------------------        
+Patrick              31-DEC-04 Plateau fromages     eau                         
+Jackie               06-MAR-05 Mousse chocolat      Vasse Felix                 
+Jackie               06-MAR-05 Pates beurre         Vasse Felix                 
+Phil                 06-MAR-05 Mousse chocolat      Vasse Felix                 
+Phil                 06-MAR-05 Pates beurre         Vasse Felix                 
+
+27 rows selected.
+
+SQL> spool off;	(select nomp as plats from repas.lemenu where dater='06-MAR-05') X
+SP2-0768: Illegal SPOOL command
+Usage: SPOOL { <file> | OFF | OUT }
+where <file> is file_name[.ext] [CRE[ATE]|REP[LACE]|APP[END]]
+SQL> spool off;
