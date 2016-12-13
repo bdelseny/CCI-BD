@@ -1,0 +1,33 @@
+SQL> select numc, 0, vDep, 0
+  2  	from agence.lescircuits;
+
+      NUMC          0 VDEP                          0                           
+---------- ---------- -------------------- ----------                           
+         1          0 Paris                         0                           
+         2          0 Paris                         0                           
+         3          0 Paris                         0                           
+         4          0 Paris                         0                           
+         5          0 Lyon                          0                           
+         6          0 Paris                         0                           
+         7          0 Quiberon                      0                           
+         8          0 Clermont Ferrand              0                           
+         9          0 Paris                         0                           
+        10          0 Shannon                       0                           
+        11          0 Shannon                       0                           
+
+      NUMC          0 VDEP                          0                           
+---------- ---------- -------------------- ----------                           
+        12          0 Dublin                        0                           
+        13          0 Paris                         0                           
+        14          0 Reykjavik                     0                           
+        15          0 Paris                         0                           
+        16          0 Paris                         0                           
+        17          0 Lisbonne                      0                           
+        18          0 Paris                         0                           
+        19          0 Rome                          0                           
+        21          0 Paris                         0                           
+        20          0 Briancon                      0                           
+
+21 rows selected.
+
+SQL> spool off;

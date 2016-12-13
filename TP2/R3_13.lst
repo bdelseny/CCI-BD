@@ -1,0 +1,205 @@
+SQL> select numc, 0 as rang, vDep as villes, 0 as nbjours --R1
+  2  	from agence.lescircuits
+  3  union
+  4  select numc, 42, varr, 0	--R2
+  5  	from agence.lescircuits
+  6  union
+  7  select numc, rang, vetape, nbjours
+  8  	from agence.lesetapes;
+
+      NUMC       RANG VILLES                  NBJOURS                           
+---------- ---------- -------------------- ----------                           
+         1          0 Paris                         0                           
+         1          1 Londres                       2                           
+         1         42 Paris                         0                           
+         2          0 Paris                         0                           
+         2          1 Londres                       2                           
+         2         42 Paris                         0                           
+         3          0 Paris                         0                           
+         3          1 Amsterdam                     3                           
+         3         42 Paris                         0                           
+         4          0 Paris                         0                           
+         4          1 Amsterdam                     4                           
+
+      NUMC       RANG VILLES                  NBJOURS                           
+---------- ---------- -------------------- ----------                           
+         4         42 Paris                         0                           
+         5          0 Lyon                          0                           
+         5          1 Venise                        5                           
+         5         42 Lyon                          0                           
+         6          0 Paris                         0                           
+         6          1 Venise                        4                           
+         6         42 Paris                         0                           
+         7          0 Quiberon                      0                           
+         7          1 Quiberon                      2                           
+         7          2 Port Cotton                   2                           
+         7          3 Port Maria                    1                           
+
+      NUMC       RANG VILLES                  NBJOURS                           
+---------- ---------- -------------------- ----------                           
+         7          4 Houat                         1                           
+         7          5 Hoedic                        1                           
+         7         42 Hoedic                        0                           
+         8          0 Clermont Ferrand              0                           
+         8          1 Laschamps                     2                           
+         8          2 Orcival                       3                           
+         8          3 Besse                         2                           
+         8         42 Besse                         0                           
+         9          0 Paris                         0                           
+         9          1 Sissinghurst                  2                           
+         9          2 Salisbury                     2                           
+
+      NUMC       RANG VILLES                  NBJOURS                           
+---------- ---------- -------------------- ----------                           
+         9          3 Exeter                        1                           
+         9          4 St Ives                       1                           
+         9          5 Bath                          1                           
+         9          6 Londres                       1                           
+         9         42 Paris                         0                           
+        10          0 Shannon                       0                           
+        10          1 Shannon                       1                           
+        10          2 Dingle                        3                           
+        10          3 Killarney                     2                           
+        10          4 Kenmare                       1                           
+        10          5 Glengariff                    3                           
+
+      NUMC       RANG VILLES                  NBJOURS                           
+---------- ---------- -------------------- ----------                           
+        10          6 Bantry                        2                           
+        10          7 Cork                          1                           
+        10         42 Cork                          0                           
+        11          0 Shannon                       0                           
+        11          1 Galway                        2                           
+        11          2 Clifden                       2                           
+        11          3 Cleggan                       2                           
+        11          4 Leenan                        1                           
+        11          5 Louisburgh                    2                           
+        11          6 Westport                      2                           
+        11          7 Ennis                         2                           
+
+      NUMC       RANG VILLES                  NBJOURS                           
+---------- ---------- -------------------- ----------                           
+        11         42 Shannon                       0                           
+        12          0 Dublin                        0                           
+        12          1 Donegal                       1                           
+        12          2 Killibegs                     2                           
+        12          3 Carrick                       2                           
+        12          4 Ardara                        2                           
+        12          5 Dungloe                       2                           
+        12          6 Letterkenny                   1                           
+        12          7 Dublin                        2                           
+        12         42 Dublin                        0                           
+        13          0 Paris                         0                           
+
+      NUMC       RANG VILLES                  NBJOURS                           
+---------- ---------- -------------------- ----------                           
+        13          1 Copenhague                    4                           
+        13          2 Jakobshavn                    2                           
+        13          3 Christianshab                 2                           
+        13          4 Godhavn                       1                           
+        13          5 Disko                         2                           
+        13          6 Egedesmine                    1                           
+        13          7 Holsteinborg                  4                           
+        13          8 Sondre                        2                           
+        13         42 Paris                         0                           
+        14          0 Reykjavik                     0                           
+        14          1 Reykjavik                     3                           
+
+      NUMC       RANG VILLES                  NBJOURS                           
+---------- ---------- -------------------- ----------                           
+        14          2 Gullfoss                      2                           
+        14          3 Geysir                        2                           
+        14          4 Hveravellir                   2                           
+        14          5 Akureyri                      2                           
+        14          6 Myvatn                        2                           
+        14          7 Asbyrgi                       2                           
+        14         42 Reykjavik                     0                           
+        15          0 Paris                         0                           
+        15          1 Reykjavik                     2                           
+        15          2 Reykholt                      2                           
+        15          3 Husavik                       2                           
+
+      NUMC       RANG VILLES                  NBJOURS                           
+---------- ---------- -------------------- ----------                           
+        15          4 Godafoss                      2                           
+        15         42 Paris                         0                           
+        16          0 Paris                         0                           
+        16          1 Helsinky                      2                           
+        16          2 Ylivieska                     1                           
+        16          3 Tornio                        1                           
+        16          4 Cap Nord                      1                           
+        16          5 Hammerfest                    1                           
+        16          6 Inari                         1                           
+        16          7 Salla                         1                           
+        16          8 Saarijarvi                    2                           
+
+      NUMC       RANG VILLES                  NBJOURS                           
+---------- ---------- -------------------- ----------                           
+        16         42 Paris                         0                           
+        17          0 Lisbonne                      0                           
+        17          1 Lisbonne                      2                           
+        17          2 Leiria                        1                           
+        17          3 Porto                         2                           
+        17          4 Vila Real                     2                           
+        17          5 Urgeirica                     1                           
+        17          6 Fatima                        2                           
+        17          7 Castelo de Vide               1                           
+        17          8 Evora                         2                           
+        17          9 Faro                          1                           
+
+      NUMC       RANG VILLES                  NBJOURS                           
+---------- ---------- -------------------- ----------                           
+        17         42 Lisbonne                      0                           
+        18          0 Paris                         0                           
+        18          1 Rome                          3                           
+        18          2 Florence                      3                           
+        18          3 Ravenne                       2                           
+        18          4 Verone                        1                           
+        18          5 Venise                        3                           
+        18         42 Paris                         0                           
+        19          0 Rome                          0                           
+        19          1 Rome                          2                           
+        19          2 Naples                        1                           
+
+      NUMC       RANG VILLES                  NBJOURS                           
+---------- ---------- -------------------- ----------                           
+        19          3 Pompei                        1                           
+        19          4 Capri                         1                           
+        19          5 Salerne                       1                           
+        19          6 Cosenza                       2                           
+        19          7 Catanzaro                     1                           
+        19          8 Metaponto                     1                           
+        19          9 Lecce                         1                           
+        19         10 Brindisi                      1                           
+        19         11 Bari                          2                           
+        19         12 Benevento                     2                           
+        19         13 Caserte                       2                           
+
+      NUMC       RANG VILLES                  NBJOURS                           
+---------- ---------- -------------------- ----------                           
+        19         42 Rome                          0                           
+        20          0 Briancon                      0                           
+        20          1 Briancon                      6                           
+        20         42 Briancon                      0                           
+        21          0 Paris                         0                           
+        21          1 Helsinky                      2                           
+        21          2 Ylivieska                     1                           
+        21          3 Tornio                        1                           
+        21          4 Cap Nord                      1                           
+        21          5 Hammerfest                    1                           
+        21          6 Inari                         1                           
+
+      NUMC       RANG VILLES                  NBJOURS                           
+---------- ---------- -------------------- ----------                           
+        21          7 Salla                         1                           
+        21          8 Saarijarvi                    2                           
+        21          9 Rome                          3                           
+        21         10 Florence                      3                           
+        21         11 Ravenne                       2                           
+        21         12 Verone                        1                           
+        21         13 Venise                        3                           
+        21         42 Rome                          0                           
+
+151 rows selected.
+
+SQL> spool off;
