@@ -1,7 +1,7 @@
-SQL> select numc, 0, vDep, 0
-  2  	from agence.lescircuits;
+SQL> select numc, 0 as rang, vDep as villes, 0 as nbjours --R1
+  2  						from agence.lescircuits;
 
-      NUMC          0 VDEP                          0                           
+      NUMC       RANG VILLES                  NBJOURS                           
 ---------- ---------- -------------------- ----------                           
          1          0 Paris                         0                           
          2          0 Paris                         0                           
@@ -15,7 +15,7 @@ SQL> select numc, 0, vDep, 0
         10          0 Shannon                       0                           
         11          0 Shannon                       0                           
 
-      NUMC          0 VDEP                          0                           
+      NUMC       RANG VILLES                  NBJOURS                           
 ---------- ---------- -------------------- ----------                           
         12          0 Dublin                        0                           
         13          0 Paris                         0                           
@@ -30,4 +30,4 @@ SQL> select numc, 0, vDep, 0
 
 21 rows selected.
 
-SQL> spool off;
+SQL> spool off

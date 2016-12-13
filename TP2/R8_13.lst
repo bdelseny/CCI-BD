@@ -1,0 +1,310 @@
+SQL> with R5 as (
+  2  	select R4.numc, R4.rang, R4.datedep, V.pays, R4.nbjours
+  3  		from (
+  4  			select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
+  5  				from (
+  6  					select numc, 0 as rang, vDep as villes, 0 as nbjours --R1
+  7  						from agence.lescircuits
+  8  					union
+  9  					select C.numc, max(E.rang)+1 as rang, varr, 0 as nbjours	--R2
+ 10  						from agence.lescircuits C join agence.lesetapes E on (C.numc=E.numc)
+ 11  						group by C.numc, varr
+ 12  					union
+ 13  					select numc, rang, vetape, nbjours
+ 14  						from agence.lesetapes
+ 15  					) R3 join agence.lesprogrammations P
+ 16  						on (R3.numc=P.numc)
+ 17  				order by P.numc, P.datedep, R3.rang
+ 18  			) R4 join agence.lesvilles V on (V.nomv=R4.villes)
+ 19  		order by R4.numc, R4.datedep, R4.rang)
+ 20  select numc, datedep, pays, (nbj+datedep) as dateEntree
+ 21  	from (
+ 22  			select R61.numc, R61.rang, R61.datedep, R61.pays, R61.nbj
+ 23  		from (
+ 24  			select R51.numc, R51.rang, R51.datedep, R51.pays, sum(R52.nbJours) as nbj
+ 25  				from R5 R51 join R5 R52 on (R51.numc=R52.numc and R51.dateDep=R52.dateDep and R51.rang>R52.rang)
+ 26  				group by R51.numc, R51.rang, R51.datedep, R51.pays
+ 27  				union
+ 28  			select *
+ 29  				from R5
+ 30  				where rang=0
+ 31  				order by numc, datedep, rang) R61
+ 32  		join (
+ 33  			select R51.numc, R51.rang, R51.datedep, R51.pays, sum(R52.nbJours) as nbj
+ 34  				from R5 R51 join R5 R52 on (R51.numc=R52.numc and R51.dateDep=R52.dateDep and R51.rang>R52.rang)
+ 35  				group by R51.numc, R51.rang, R51.datedep, R51.pays
+ 36  				union
+ 37  			select *
+ 38  				from R5
+ 39  				where rang=0
+ 40  				order by numc, datedep, rang) R62
+ 41  		on (R61.numc=R62.numc and R61.datedep=R62.datedep and R61.pays!=R62.pays and R62.rang=(R61.rang-1))
+ 42  		union
+ 43  	select *
+ 44  		from (
+ 45  			select R51.numc, R51.rang, R51.datedep, R51.pays, sum(R52.nbJours) as nbj
+ 46  				from R5 R51 join R5 R52 on (R51.numc=R52.numc and R51.dateDep=R52.dateDep and R51.rang>R52.rang)
+ 47  				group by R51.numc, R51.rang, R51.datedep, R51.pays
+ 48  				union
+ 49  			select *
+ 50  				from R5
+ 51  				where rang=0
+ 52  				order by numc, datedep, rang)
+ 53  		where rang=0
+ 54  		order by numc, datedep, rang);
+
+      NUMC DATEDEP   PAYS                 DATEENTRE                             
+---------- --------- -------------------- ---------                             
+         1 04-JAN-10 France               04-JAN-10                             
+         1 04-JAN-10 Angleterre           04-JAN-10                             
+         1 04-JAN-10 France               06-JAN-10                             
+         1 04-FEB-10 France               04-FEB-10                             
+         1 04-FEB-10 Angleterre           04-FEB-10                             
+         1 04-FEB-10 France               06-FEB-10                             
+         1 06-FEB-10 France               06-FEB-10                             
+         1 06-FEB-10 Angleterre           06-FEB-10                             
+         1 06-FEB-10 France               08-FEB-10                             
+         1 21-JUL-10 France               21-JUL-10                             
+         1 21-JUL-10 Angleterre           21-JUL-10                             
+
+      NUMC DATEDEP   PAYS                 DATEENTRE                             
+---------- --------- -------------------- ---------                             
+         1 21-JUL-10 France               23-JUL-10                             
+         1 24-JUL-10 France               24-JUL-10                             
+         1 24-JUL-10 Angleterre           24-JUL-10                             
+         1 24-JUL-10 France               26-JUL-10                             
+         2 06-JAN-10 France               06-JAN-10                             
+         2 06-JAN-10 Angleterre           06-JAN-10                             
+         2 06-JAN-10 France               08-JAN-10                             
+         2 07-JAN-10 France               07-JAN-10                             
+         2 07-JAN-10 Angleterre           07-JAN-10                             
+         2 07-JAN-10 France               09-JAN-10                             
+         2 05-FEB-10 France               05-FEB-10                             
+
+      NUMC DATEDEP   PAYS                 DATEENTRE                             
+---------- --------- -------------------- ---------                             
+         2 05-FEB-10 Angleterre           05-FEB-10                             
+         2 05-FEB-10 France               07-FEB-10                             
+         2 06-FEB-10 France               06-FEB-10                             
+         2 06-FEB-10 Angleterre           06-FEB-10                             
+         2 06-FEB-10 France               08-FEB-10                             
+         2 05-SEP-10 France               05-SEP-10                             
+         2 05-SEP-10 Angleterre           05-SEP-10                             
+         2 05-SEP-10 France               07-SEP-10                             
+         3 24-DEC-09 France               24-DEC-09                             
+         3 24-DEC-09 Hollande             24-DEC-09                             
+         3 24-DEC-09 France               27-DEC-09                             
+
+      NUMC DATEDEP   PAYS                 DATEENTRE                             
+---------- --------- -------------------- ---------                             
+         3 31-DEC-09 France               31-DEC-09                             
+         3 31-DEC-09 Hollande             31-DEC-09                             
+         3 31-DEC-09 France               03-JAN-10                             
+         3 03-JUL-10 France               03-JUL-10                             
+         3 03-JUL-10 Hollande             03-JUL-10                             
+         3 03-JUL-10 France               06-JUL-10                             
+         4 30-JUN-10 France               30-JUN-10                             
+         4 30-JUN-10 Hollande             30-JUN-10                             
+         4 30-JUN-10 France               04-JUL-10                             
+         4 06-AUG-10 France               06-AUG-10                             
+         4 06-AUG-10 Hollande             06-AUG-10                             
+
+      NUMC DATEDEP   PAYS                 DATEENTRE                             
+---------- --------- -------------------- ---------                             
+         4 06-AUG-10 France               10-AUG-10                             
+         4 31-AUG-10 France               31-AUG-10                             
+         4 31-AUG-10 Hollande             31-AUG-10                             
+         4 31-AUG-10 France               04-SEP-10                             
+         4 06-NOV-10 France               06-NOV-10                             
+         4 06-NOV-10 Hollande             06-NOV-10                             
+         4 06-NOV-10 France               10-NOV-10                             
+         5 31-AUG-10 France               31-AUG-10                             
+         5 31-AUG-10 Italie               31-AUG-10                             
+         5 31-AUG-10 France               05-SEP-10                             
+         5 06-NOV-10 France               06-NOV-10                             
+
+      NUMC DATEDEP   PAYS                 DATEENTRE                             
+---------- --------- -------------------- ---------                             
+         5 06-NOV-10 Italie               06-NOV-10                             
+         5 06-NOV-10 France               11-NOV-10                             
+         6 06-FEB-10 France               06-FEB-10                             
+         6 06-FEB-10 Italie               06-FEB-10                             
+         6 06-FEB-10 France               10-FEB-10                             
+         6 06-SEP-10 France               06-SEP-10                             
+         6 06-SEP-10 Italie               06-SEP-10                             
+         6 06-SEP-10 France               10-SEP-10                             
+         6 06-OCT-10 France               06-OCT-10                             
+         6 06-OCT-10 Italie               06-OCT-10                             
+         6 06-OCT-10 France               10-OCT-10                             
+
+      NUMC DATEDEP   PAYS                 DATEENTRE                             
+---------- --------- -------------------- ---------                             
+         6 16-NOV-10 France               16-NOV-10                             
+         6 16-NOV-10 Italie               16-NOV-10                             
+         6 16-NOV-10 France               20-NOV-10                             
+         7 16-DEC-09 France               16-DEC-09                             
+         7 06-JAN-10 France               06-JAN-10                             
+         7 26-FEB-10 France               26-FEB-10                             
+         7 31-AUG-10 France               31-AUG-10                             
+         7 31-OCT-10 France               31-OCT-10                             
+         8 24-DEC-09 France               24-DEC-09                             
+         8 31-DEC-09 France               31-DEC-09                             
+         8 14-FEB-10 France               14-FEB-10                             
+
+      NUMC DATEDEP   PAYS                 DATEENTRE                             
+---------- --------- -------------------- ---------                             
+         8 16-FEB-10 France               16-FEB-10                             
+         8 21-FEB-10 France               21-FEB-10                             
+         8 28-FEB-10 France               28-FEB-10                             
+         8 26-APR-10 France               26-APR-10                             
+         8 16-MAY-10 France               16-MAY-10                             
+         8 21-JUL-10 France               21-JUL-10                             
+         8 31-AUG-10 France               31-AUG-10                             
+         8 14-NOV-10 France               14-NOV-10                             
+         9 06-FEB-10 France               06-FEB-10                             
+         9 06-FEB-10 Angleterre           06-FEB-10                             
+         9 06-FEB-10 France               14-FEB-10                             
+
+      NUMC DATEDEP   PAYS                 DATEENTRE                             
+---------- --------- -------------------- ---------                             
+         9 30-OCT-10 France               30-OCT-10                             
+         9 30-OCT-10 Angleterre           30-OCT-10                             
+         9 30-OCT-10 France               07-NOV-10                             
+        10 01-JAN-10 Irlande              01-JAN-10                             
+        10 21-JAN-10 Irlande              21-JAN-10                             
+        10 11-FEB-10 Irlande              11-FEB-10                             
+        10 28-FEB-10 Irlande              28-FEB-10                             
+        11 06-FEB-10 Irlande              06-FEB-10                             
+        11 28-FEB-10 Irlande              28-FEB-10                             
+        11 29-MAY-10 Irlande              29-MAY-10                             
+        11 30-JUN-10 Irlande              30-JUN-10                             
+
+      NUMC DATEDEP   PAYS                 DATEENTRE                             
+---------- --------- -------------------- ---------                             
+        12 06-FEB-10 Irlande              06-FEB-10                             
+        13 31-DEC-09 France               31-DEC-09                             
+        13 31-DEC-09 Danemark             31-DEC-09                             
+        13 31-DEC-09 Groenland            04-JAN-10                             
+        13 31-DEC-09 France               18-JAN-10                             
+        13 01-JAN-10 France               01-JAN-10                             
+        13 01-JAN-10 Danemark             01-JAN-10                             
+        13 01-JAN-10 Groenland            05-JAN-10                             
+        13 01-JAN-10 France               19-JAN-10                             
+        13 06-FEB-10 France               06-FEB-10                             
+        13 06-FEB-10 Danemark             06-FEB-10                             
+
+      NUMC DATEDEP   PAYS                 DATEENTRE                             
+---------- --------- -------------------- ---------                             
+        13 06-FEB-10 Groenland            10-FEB-10                             
+        13 06-FEB-10 France               24-FEB-10                             
+        13 30-APR-10 France               30-APR-10                             
+        13 30-APR-10 Danemark             30-APR-10                             
+        13 30-APR-10 Groenland            04-MAY-10                             
+        13 30-APR-10 France               18-MAY-10                             
+        13 06-MAY-10 France               06-MAY-10                             
+        13 06-MAY-10 Danemark             06-MAY-10                             
+        13 06-MAY-10 Groenland            10-MAY-10                             
+        13 06-MAY-10 France               24-MAY-10                             
+        13 31-MAY-10 France               31-MAY-10                             
+
+      NUMC DATEDEP   PAYS                 DATEENTRE                             
+---------- --------- -------------------- ---------                             
+        13 31-MAY-10 Danemark             31-MAY-10                             
+        13 31-MAY-10 Groenland            04-JUN-10                             
+        13 31-MAY-10 France               18-JUN-10                             
+        13 30-JUN-10 France               30-JUN-10                             
+        13 30-JUN-10 Danemark             30-JUN-10                             
+        13 30-JUN-10 Groenland            04-JUL-10                             
+        13 30-JUN-10 France               18-JUL-10                             
+        13 31-DEC-10 France               31-DEC-10                             
+        13 31-DEC-10 Danemark             31-DEC-10                             
+        13 31-DEC-10 Groenland            04-JAN-11                             
+        13 31-DEC-10 France               18-JAN-11                             
+
+      NUMC DATEDEP   PAYS                 DATEENTRE                             
+---------- --------- -------------------- ---------                             
+        14 06-JUL-10 Islande              06-JUL-10                             
+        14 26-JUL-10 Islande              26-JUL-10                             
+        15 06-FEB-10 France               06-FEB-10                             
+        15 06-FEB-10 Islande              06-FEB-10                             
+        15 06-FEB-10 France               14-FEB-10                             
+        15 31-AUG-10 France               31-AUG-10                             
+        15 31-AUG-10 Islande              31-AUG-10                             
+        15 31-AUG-10 France               08-SEP-10                             
+        16 06-JAN-10 France               06-JAN-10                             
+        16 06-JAN-10 Finlande             06-JAN-10                             
+        16 06-JAN-10 Norvege              08-JAN-10                             
+
+      NUMC DATEDEP   PAYS                 DATEENTRE                             
+---------- --------- -------------------- ---------                             
+        16 06-JAN-10 France               16-JAN-10                             
+        16 06-FEB-10 France               06-FEB-10                             
+        16 06-FEB-10 Finlande             06-FEB-10                             
+        16 06-FEB-10 Norvege              08-FEB-10                             
+        16 06-FEB-10 France               16-FEB-10                             
+        16 31-AUG-10 France               31-AUG-10                             
+        16 31-AUG-10 Finlande             31-AUG-10                             
+        16 31-AUG-10 Norvege              02-SEP-10                             
+        16 31-AUG-10 France               10-SEP-10                             
+        17 06-FEB-10 Portugal             06-FEB-10                             
+        17 16-FEB-10 Portugal             16-FEB-10                             
+
+      NUMC DATEDEP   PAYS                 DATEENTRE                             
+---------- --------- -------------------- ---------                             
+        17 26-FEB-10 Portugal             26-FEB-10                             
+        17 31-DEC-10 Portugal             31-DEC-10                             
+        18 30-APR-10 France               30-APR-10                             
+        18 30-APR-10 Italie               30-APR-10                             
+        18 30-APR-10 France               12-MAY-10                             
+        18 30-JUL-10 France               30-JUL-10                             
+        18 30-JUL-10 Italie               30-JUL-10                             
+        18 30-JUL-10 France               11-AUG-10                             
+        18 06-OCT-10 France               06-OCT-10                             
+        18 06-OCT-10 Italie               06-OCT-10                             
+        18 06-OCT-10 France               18-OCT-10                             
+
+      NUMC DATEDEP   PAYS                 DATEENTRE                             
+---------- --------- -------------------- ---------                             
+        18 06-DEC-10 France               06-DEC-10                             
+        18 06-DEC-10 Italie               06-DEC-10                             
+        18 06-DEC-10 France               18-DEC-10                             
+        19 06-FEB-10 Italie               06-FEB-10                             
+        19 15-APR-10 Italie               15-APR-10                             
+        19 05-AUG-10 Italie               05-AUG-10                             
+        19 06-SEP-10 Italie               06-SEP-10                             
+        19 16-SEP-10 Italie               16-SEP-10                             
+        19 10-DEC-10 Italie               10-DEC-10                             
+        19 20-DEC-10 Italie               20-DEC-10                             
+        20 22-DEC-09 France               22-DEC-09                             
+
+      NUMC DATEDEP   PAYS                 DATEENTRE                             
+---------- --------- -------------------- ---------                             
+        20 20-JAN-10 France               20-JAN-10                             
+        20 27-JAN-10 France               27-JAN-10                             
+        20 02-FEB-10 France               02-FEB-10                             
+        20 06-FEB-10 France               06-FEB-10                             
+        20 01-APR-10 France               01-APR-10                             
+        20 03-APR-10 France               03-APR-10                             
+        21 15-JAN-10 France               15-JAN-10                             
+        21 15-JAN-10 Finlande             15-JAN-10                             
+        21 15-JAN-10 Norvege              17-JAN-10                             
+        21 15-JAN-10 Italie               25-JAN-10                             
+        21 25-JAN-10 France               25-JAN-10                             
+
+      NUMC DATEDEP   PAYS                 DATEENTRE                             
+---------- --------- -------------------- ---------                             
+        21 25-JAN-10 Finlande             25-JAN-10                             
+        21 25-JAN-10 Norvege              27-JAN-10                             
+        21 25-JAN-10 Italie               04-FEB-10                             
+        21 26-FEB-10 France               26-FEB-10                             
+        21 26-FEB-10 Finlande             26-FEB-10                             
+        21 26-FEB-10 Norvege              28-FEB-10                             
+        21 26-FEB-10 Italie               08-MAR-10                             
+        21 06-APR-10 France               06-APR-10                             
+        21 06-APR-10 Finlande             06-APR-10                             
+        21 06-APR-10 Norvege              08-APR-10                             
+        21 06-APR-10 Italie               16-APR-10                             
+
+198 rows selected.
+
+SQL> spool off

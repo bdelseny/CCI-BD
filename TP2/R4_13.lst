@@ -1,113 +1,114 @@
 SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
-  2  			from (
-  3  				select numc, 0 as rang, vDep as villes, 0 as nbjours --R1
-  4  					from agence.lescircuits
-  5  				union
-  6  				select numc, 42, varr, 0	--R2
-  7  					from agence.lescircuits
-  8  				union
-  9  				select numc, rang, vetape, nbjours
- 10  					from agence.lesetapes
- 11  				) R3 join agence.lesprogrammations P
- 12  					on (R3.numc=P.numc)
- 13  			order by P.numc, P.datedep, R3.rang;
+  2  				from (
+  3  					select numc, 0 as rang, vDep as villes, 0 as nbjours --R1
+  4  						from agence.lescircuits
+  5  					union
+  6  					select C.numc, max(E.rang)+1 as rang, varr, 0 as nbjours	--R2
+  7  						from agence.lescircuits C join agence.lesetapes E on (C.numc=E.numc)
+  8  						group by C.numc, varr
+  9  					union
+ 10  					select numc, rang, vetape, nbjours
+ 11  						from agence.lesetapes
+ 12  					) R3 join agence.lesprogrammations P
+ 13  						on (R3.numc=P.numc)
+ 14  				order by P.numc, P.datedep, R3.rang;
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
          1          0 04-JAN-10 Paris                         0                 
          1          1 04-JAN-10 Londres                       2                 
-         1         42 04-JAN-10 Paris                         0                 
+         1          2 04-JAN-10 Paris                         0                 
          1          0 04-FEB-10 Paris                         0                 
          1          1 04-FEB-10 Londres                       2                 
-         1         42 04-FEB-10 Paris                         0                 
+         1          2 04-FEB-10 Paris                         0                 
          1          0 06-FEB-10 Paris                         0                 
          1          1 06-FEB-10 Londres                       2                 
-         1         42 06-FEB-10 Paris                         0                 
+         1          2 06-FEB-10 Paris                         0                 
          1          0 21-JUL-10 Paris                         0                 
          1          1 21-JUL-10 Londres                       2                 
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
-         1         42 21-JUL-10 Paris                         0                 
+         1          2 21-JUL-10 Paris                         0                 
          1          0 24-JUL-10 Paris                         0                 
          1          1 24-JUL-10 Londres                       2                 
-         1         42 24-JUL-10 Paris                         0                 
+         1          2 24-JUL-10 Paris                         0                 
          2          0 06-JAN-10 Paris                         0                 
          2          1 06-JAN-10 Londres                       2                 
-         2         42 06-JAN-10 Paris                         0                 
+         2          2 06-JAN-10 Paris                         0                 
          2          0 07-JAN-10 Paris                         0                 
          2          1 07-JAN-10 Londres                       2                 
-         2         42 07-JAN-10 Paris                         0                 
+         2          2 07-JAN-10 Paris                         0                 
          2          0 05-FEB-10 Paris                         0                 
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
          2          1 05-FEB-10 Londres                       2                 
-         2         42 05-FEB-10 Paris                         0                 
+         2          2 05-FEB-10 Paris                         0                 
          2          0 06-FEB-10 Paris                         0                 
          2          1 06-FEB-10 Londres                       2                 
-         2         42 06-FEB-10 Paris                         0                 
+         2          2 06-FEB-10 Paris                         0                 
          2          0 05-SEP-10 Paris                         0                 
          2          1 05-SEP-10 Londres                       2                 
-         2         42 05-SEP-10 Paris                         0                 
+         2          2 05-SEP-10 Paris                         0                 
          3          0 24-DEC-09 Paris                         0                 
          3          1 24-DEC-09 Amsterdam                     3                 
-         3         42 24-DEC-09 Paris                         0                 
+         3          2 24-DEC-09 Paris                         0                 
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
          3          0 31-DEC-09 Paris                         0                 
          3          1 31-DEC-09 Amsterdam                     3                 
-         3         42 31-DEC-09 Paris                         0                 
+         3          2 31-DEC-09 Paris                         0                 
          3          0 03-JUL-10 Paris                         0                 
          3          1 03-JUL-10 Amsterdam                     3                 
-         3         42 03-JUL-10 Paris                         0                 
+         3          2 03-JUL-10 Paris                         0                 
          4          0 30-JUN-10 Paris                         0                 
          4          1 30-JUN-10 Amsterdam                     4                 
-         4         42 30-JUN-10 Paris                         0                 
+         4          2 30-JUN-10 Paris                         0                 
          4          0 06-AUG-10 Paris                         0                 
          4          1 06-AUG-10 Amsterdam                     4                 
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
-         4         42 06-AUG-10 Paris                         0                 
+         4          2 06-AUG-10 Paris                         0                 
          4          0 31-AUG-10 Paris                         0                 
          4          1 31-AUG-10 Amsterdam                     4                 
-         4         42 31-AUG-10 Paris                         0                 
+         4          2 31-AUG-10 Paris                         0                 
          4          0 06-NOV-10 Paris                         0                 
          4          1 06-NOV-10 Amsterdam                     4                 
-         4         42 06-NOV-10 Paris                         0                 
+         4          2 06-NOV-10 Paris                         0                 
          5          0 31-AUG-10 Lyon                          0                 
          5          1 31-AUG-10 Venise                        5                 
-         5         42 31-AUG-10 Lyon                          0                 
+         5          2 31-AUG-10 Lyon                          0                 
          5          0 06-NOV-10 Lyon                          0                 
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
          5          1 06-NOV-10 Venise                        5                 
-         5         42 06-NOV-10 Lyon                          0                 
+         5          2 06-NOV-10 Lyon                          0                 
          6          0 06-FEB-10 Paris                         0                 
          6          1 06-FEB-10 Venise                        4                 
-         6         42 06-FEB-10 Paris                         0                 
+         6          2 06-FEB-10 Paris                         0                 
          6          0 06-SEP-10 Paris                         0                 
          6          1 06-SEP-10 Venise                        4                 
-         6         42 06-SEP-10 Paris                         0                 
+         6          2 06-SEP-10 Paris                         0                 
          6          0 06-OCT-10 Paris                         0                 
          6          1 06-OCT-10 Venise                        4                 
-         6         42 06-OCT-10 Paris                         0                 
+         6          2 06-OCT-10 Paris                         0                 
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
          6          0 16-NOV-10 Paris                         0                 
          6          1 16-NOV-10 Venise                        4                 
-         6         42 16-NOV-10 Paris                         0                 
+         6          2 16-NOV-10 Paris                         0                 
          7          0 16-DEC-09 Quiberon                      0                 
          7          1 16-DEC-09 Quiberon                      2                 
          7          2 16-DEC-09 Port Cotton                   2                 
          7          3 16-DEC-09 Port Maria                    1                 
          7          4 16-DEC-09 Houat                         1                 
          7          5 16-DEC-09 Hoedic                        1                 
-         7         42 16-DEC-09 Hoedic                        0                 
+         7          6 16-DEC-09 Hoedic                        0                 
          7          0 06-JAN-10 Quiberon                      0                 
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
@@ -117,7 +118,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
          7          3 06-JAN-10 Port Maria                    1                 
          7          4 06-JAN-10 Houat                         1                 
          7          5 06-JAN-10 Hoedic                        1                 
-         7         42 06-JAN-10 Hoedic                        0                 
+         7          6 06-JAN-10 Hoedic                        0                 
          7          0 26-FEB-10 Quiberon                      0                 
          7          1 26-FEB-10 Quiberon                      2                 
          7          2 26-FEB-10 Port Cotton                   2                 
@@ -127,14 +128,14 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
          7          5 26-FEB-10 Hoedic                        1                 
-         7         42 26-FEB-10 Hoedic                        0                 
+         7          6 26-FEB-10 Hoedic                        0                 
          7          0 31-AUG-10 Quiberon                      0                 
          7          1 31-AUG-10 Quiberon                      2                 
          7          2 31-AUG-10 Port Cotton                   2                 
          7          3 31-AUG-10 Port Maria                    1                 
          7          4 31-AUG-10 Houat                         1                 
          7          5 31-AUG-10 Hoedic                        1                 
-         7         42 31-AUG-10 Hoedic                        0                 
+         7          6 31-AUG-10 Hoedic                        0                 
          7          0 31-OCT-10 Quiberon                      0                 
          7          1 31-OCT-10 Quiberon                      2                 
 
@@ -144,12 +145,12 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
          7          3 31-OCT-10 Port Maria                    1                 
          7          4 31-OCT-10 Houat                         1                 
          7          5 31-OCT-10 Hoedic                        1                 
-         7         42 31-OCT-10 Hoedic                        0                 
+         7          6 31-OCT-10 Hoedic                        0                 
          8          0 24-DEC-09 Clermont Ferrand              0                 
          8          1 24-DEC-09 Laschamps                     2                 
          8          2 24-DEC-09 Orcival                       3                 
          8          3 24-DEC-09 Besse                         2                 
-         8         42 24-DEC-09 Besse                         0                 
+         8          4 24-DEC-09 Besse                         0                 
          8          0 31-DEC-09 Clermont Ferrand              0                 
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
@@ -157,12 +158,12 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
          8          1 31-DEC-09 Laschamps                     2                 
          8          2 31-DEC-09 Orcival                       3                 
          8          3 31-DEC-09 Besse                         2                 
-         8         42 31-DEC-09 Besse                         0                 
+         8          4 31-DEC-09 Besse                         0                 
          8          0 14-FEB-10 Clermont Ferrand              0                 
          8          1 14-FEB-10 Laschamps                     2                 
          8          2 14-FEB-10 Orcival                       3                 
          8          3 14-FEB-10 Besse                         2                 
-         8         42 14-FEB-10 Besse                         0                 
+         8          4 14-FEB-10 Besse                         0                 
          8          0 16-FEB-10 Clermont Ferrand              0                 
          8          1 16-FEB-10 Laschamps                     2                 
 
@@ -170,12 +171,12 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
 ---------- ---------- --------- -------------------- ----------                 
          8          2 16-FEB-10 Orcival                       3                 
          8          3 16-FEB-10 Besse                         2                 
-         8         42 16-FEB-10 Besse                         0                 
+         8          4 16-FEB-10 Besse                         0                 
          8          0 21-FEB-10 Clermont Ferrand              0                 
          8          1 21-FEB-10 Laschamps                     2                 
          8          2 21-FEB-10 Orcival                       3                 
          8          3 21-FEB-10 Besse                         2                 
-         8         42 21-FEB-10 Besse                         0                 
+         8          4 21-FEB-10 Besse                         0                 
          8          0 28-FEB-10 Clermont Ferrand              0                 
          8          1 28-FEB-10 Laschamps                     2                 
          8          2 28-FEB-10 Orcival                       3                 
@@ -183,12 +184,12 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
          8          3 28-FEB-10 Besse                         2                 
-         8         42 28-FEB-10 Besse                         0                 
+         8          4 28-FEB-10 Besse                         0                 
          8          0 26-APR-10 Clermont Ferrand              0                 
          8          1 26-APR-10 Laschamps                     2                 
          8          2 26-APR-10 Orcival                       3                 
          8          3 26-APR-10 Besse                         2                 
-         8         42 26-APR-10 Besse                         0                 
+         8          4 26-APR-10 Besse                         0                 
          8          0 16-MAY-10 Clermont Ferrand              0                 
          8          1 16-MAY-10 Laschamps                     2                 
          8          2 16-MAY-10 Orcival                       3                 
@@ -196,17 +197,17 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
-         8         42 16-MAY-10 Besse                         0                 
+         8          4 16-MAY-10 Besse                         0                 
          8          0 21-JUL-10 Clermont Ferrand              0                 
          8          1 21-JUL-10 Laschamps                     2                 
          8          2 21-JUL-10 Orcival                       3                 
          8          3 21-JUL-10 Besse                         2                 
-         8         42 21-JUL-10 Besse                         0                 
+         8          4 21-JUL-10 Besse                         0                 
          8          0 31-AUG-10 Clermont Ferrand              0                 
          8          1 31-AUG-10 Laschamps                     2                 
          8          2 31-AUG-10 Orcival                       3                 
          8          3 31-AUG-10 Besse                         2                 
-         8         42 31-AUG-10 Besse                         0                 
+         8          4 31-AUG-10 Besse                         0                 
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
@@ -214,7 +215,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
          8          1 14-NOV-10 Laschamps                     2                 
          8          2 14-NOV-10 Orcival                       3                 
          8          3 14-NOV-10 Besse                         2                 
-         8         42 14-NOV-10 Besse                         0                 
+         8          4 14-NOV-10 Besse                         0                 
          9          0 06-FEB-10 Paris                         0                 
          9          1 06-FEB-10 Sissinghurst                  2                 
          9          2 06-FEB-10 Salisbury                     2                 
@@ -225,7 +226,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
          9          6 06-FEB-10 Londres                       1                 
-         9         42 06-FEB-10 Paris                         0                 
+         9          7 06-FEB-10 Paris                         0                 
          9          0 30-OCT-10 Paris                         0                 
          9          1 30-OCT-10 Sissinghurst                  2                 
          9          2 30-OCT-10 Salisbury                     2                 
@@ -233,7 +234,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
          9          4 30-OCT-10 St Ives                       1                 
          9          5 30-OCT-10 Bath                          1                 
          9          6 30-OCT-10 Londres                       1                 
-         9         42 30-OCT-10 Paris                         0                 
+         9          7 30-OCT-10 Paris                         0                 
         10          0 01-JAN-10 Shannon                       0                 
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
@@ -245,7 +246,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         10          5 01-JAN-10 Glengariff                    3                 
         10          6 01-JAN-10 Bantry                        2                 
         10          7 01-JAN-10 Cork                          1                 
-        10         42 01-JAN-10 Cork                          0                 
+        10          8 01-JAN-10 Cork                          0                 
         10          0 21-JAN-10 Shannon                       0                 
         10          1 21-JAN-10 Shannon                       1                 
         10          2 21-JAN-10 Dingle                        3                 
@@ -257,7 +258,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         10          5 21-JAN-10 Glengariff                    3                 
         10          6 21-JAN-10 Bantry                        2                 
         10          7 21-JAN-10 Cork                          1                 
-        10         42 21-JAN-10 Cork                          0                 
+        10          8 21-JAN-10 Cork                          0                 
         10          0 11-FEB-10 Shannon                       0                 
         10          1 11-FEB-10 Shannon                       1                 
         10          2 11-FEB-10 Dingle                        3                 
@@ -269,7 +270,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         10          5 11-FEB-10 Glengariff                    3                 
         10          6 11-FEB-10 Bantry                        2                 
         10          7 11-FEB-10 Cork                          1                 
-        10         42 11-FEB-10 Cork                          0                 
+        10          8 11-FEB-10 Cork                          0                 
         10          0 28-FEB-10 Shannon                       0                 
         10          1 28-FEB-10 Shannon                       1                 
         10          2 28-FEB-10 Dingle                        3                 
@@ -281,7 +282,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
         10          7 28-FEB-10 Cork                          1                 
-        10         42 28-FEB-10 Cork                          0                 
+        10          8 28-FEB-10 Cork                          0                 
         11          0 06-FEB-10 Shannon                       0                 
         11          1 06-FEB-10 Galway                        2                 
         11          2 06-FEB-10 Clifden                       2                 
@@ -290,7 +291,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         11          5 06-FEB-10 Louisburgh                    2                 
         11          6 06-FEB-10 Westport                      2                 
         11          7 06-FEB-10 Ennis                         2                 
-        11         42 06-FEB-10 Shannon                       0                 
+        11          8 06-FEB-10 Shannon                       0                 
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
@@ -302,7 +303,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         11          5 28-FEB-10 Louisburgh                    2                 
         11          6 28-FEB-10 Westport                      2                 
         11          7 28-FEB-10 Ennis                         2                 
-        11         42 28-FEB-10 Shannon                       0                 
+        11          8 28-FEB-10 Shannon                       0                 
         11          0 29-MAY-10 Shannon                       0                 
         11          1 29-MAY-10 Galway                        2                 
 
@@ -314,7 +315,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         11          5 29-MAY-10 Louisburgh                    2                 
         11          6 29-MAY-10 Westport                      2                 
         11          7 29-MAY-10 Ennis                         2                 
-        11         42 29-MAY-10 Shannon                       0                 
+        11          8 29-MAY-10 Shannon                       0                 
         11          0 30-JUN-10 Shannon                       0                 
         11          1 30-JUN-10 Galway                        2                 
         11          2 30-JUN-10 Clifden                       2                 
@@ -326,7 +327,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         11          5 30-JUN-10 Louisburgh                    2                 
         11          6 30-JUN-10 Westport                      2                 
         11          7 30-JUN-10 Ennis                         2                 
-        11         42 30-JUN-10 Shannon                       0                 
+        11          8 30-JUN-10 Shannon                       0                 
         12          0 06-FEB-10 Dublin                        0                 
         12          1 06-FEB-10 Donegal                       1                 
         12          2 06-FEB-10 Killibegs                     2                 
@@ -338,7 +339,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
 ---------- ---------- --------- -------------------- ----------                 
         12          6 06-FEB-10 Letterkenny                   1                 
         12          7 06-FEB-10 Dublin                        2                 
-        12         42 06-FEB-10 Dublin                        0                 
+        12          8 06-FEB-10 Dublin                        0                 
         13          0 31-DEC-09 Paris                         0                 
         13          1 31-DEC-09 Copenhague                    4                 
         13          2 31-DEC-09 Jakobshavn                    2                 
@@ -351,7 +352,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
         13          8 31-DEC-09 Sondre                        2                 
-        13         42 31-DEC-09 Paris                         0                 
+        13          9 31-DEC-09 Paris                         0                 
         13          0 01-JAN-10 Paris                         0                 
         13          1 01-JAN-10 Copenhague                    4                 
         13          2 01-JAN-10 Jakobshavn                    2                 
@@ -364,7 +365,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
-        13         42 01-JAN-10 Paris                         0                 
+        13          9 01-JAN-10 Paris                         0                 
         13          0 06-FEB-10 Paris                         0                 
         13          1 06-FEB-10 Copenhague                    4                 
         13          2 06-FEB-10 Jakobshavn                    2                 
@@ -374,7 +375,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         13          6 06-FEB-10 Egedesmine                    1                 
         13          7 06-FEB-10 Holsteinborg                  4                 
         13          8 06-FEB-10 Sondre                        2                 
-        13         42 06-FEB-10 Paris                         0                 
+        13          9 06-FEB-10 Paris                         0                 
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
@@ -387,7 +388,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         13          6 30-APR-10 Egedesmine                    1                 
         13          7 30-APR-10 Holsteinborg                  4                 
         13          8 30-APR-10 Sondre                        2                 
-        13         42 30-APR-10 Paris                         0                 
+        13          9 30-APR-10 Paris                         0                 
         13          0 06-MAY-10 Paris                         0                 
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
@@ -400,7 +401,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         13          6 06-MAY-10 Egedesmine                    1                 
         13          7 06-MAY-10 Holsteinborg                  4                 
         13          8 06-MAY-10 Sondre                        2                 
-        13         42 06-MAY-10 Paris                         0                 
+        13          9 06-MAY-10 Paris                         0                 
         13          0 31-MAY-10 Paris                         0                 
         13          1 31-MAY-10 Copenhague                    4                 
 
@@ -413,7 +414,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         13          6 31-MAY-10 Egedesmine                    1                 
         13          7 31-MAY-10 Holsteinborg                  4                 
         13          8 31-MAY-10 Sondre                        2                 
-        13         42 31-MAY-10 Paris                         0                 
+        13          9 31-MAY-10 Paris                         0                 
         13          0 30-JUN-10 Paris                         0                 
         13          1 30-JUN-10 Copenhague                    4                 
         13          2 30-JUN-10 Jakobshavn                    2                 
@@ -426,7 +427,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         13          6 30-JUN-10 Egedesmine                    1                 
         13          7 30-JUN-10 Holsteinborg                  4                 
         13          8 30-JUN-10 Sondre                        2                 
-        13         42 30-JUN-10 Paris                         0                 
+        13          9 30-JUN-10 Paris                         0                 
         13          0 31-DEC-10 Paris                         0                 
         13          1 31-DEC-10 Copenhague                    4                 
         13          2 31-DEC-10 Jakobshavn                    2                 
@@ -439,7 +440,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         13          6 31-DEC-10 Egedesmine                    1                 
         13          7 31-DEC-10 Holsteinborg                  4                 
         13          8 31-DEC-10 Sondre                        2                 
-        13         42 31-DEC-10 Paris                         0                 
+        13          9 31-DEC-10 Paris                         0                 
         14          0 06-JUL-10 Reykjavik                     0                 
         14          1 06-JUL-10 Reykjavik                     3                 
         14          2 06-JUL-10 Gullfoss                      2                 
@@ -451,7 +452,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         14          5 06-JUL-10 Akureyri                      2                 
         14          6 06-JUL-10 Myvatn                        2                 
         14          7 06-JUL-10 Asbyrgi                       2                 
-        14         42 06-JUL-10 Reykjavik                     0                 
+        14          8 06-JUL-10 Reykjavik                     0                 
         14          0 26-JUL-10 Reykjavik                     0                 
         14          1 26-JUL-10 Reykjavik                     3                 
         14          2 26-JUL-10 Gullfoss                      2                 
@@ -463,13 +464,13 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
         14          7 26-JUL-10 Asbyrgi                       2                 
-        14         42 26-JUL-10 Reykjavik                     0                 
+        14          8 26-JUL-10 Reykjavik                     0                 
         15          0 06-FEB-10 Paris                         0                 
         15          1 06-FEB-10 Reykjavik                     2                 
         15          2 06-FEB-10 Reykholt                      2                 
         15          3 06-FEB-10 Husavik                       2                 
         15          4 06-FEB-10 Godafoss                      2                 
-        15         42 06-FEB-10 Paris                         0                 
+        15          5 06-FEB-10 Paris                         0                 
         15          0 31-AUG-10 Paris                         0                 
         15          1 31-AUG-10 Reykjavik                     2                 
         15          2 31-AUG-10 Reykholt                      2                 
@@ -478,7 +479,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
 ---------- ---------- --------- -------------------- ----------                 
         15          3 31-AUG-10 Husavik                       2                 
         15          4 31-AUG-10 Godafoss                      2                 
-        15         42 31-AUG-10 Paris                         0                 
+        15          5 31-AUG-10 Paris                         0                 
         16          0 06-JAN-10 Paris                         0                 
         16          1 06-JAN-10 Helsinky                      2                 
         16          2 06-JAN-10 Ylivieska                     1                 
@@ -491,7 +492,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
         16          8 06-JAN-10 Saarijarvi                    2                 
-        16         42 06-JAN-10 Paris                         0                 
+        16          9 06-JAN-10 Paris                         0                 
         16          0 06-FEB-10 Paris                         0                 
         16          1 06-FEB-10 Helsinky                      2                 
         16          2 06-FEB-10 Ylivieska                     1                 
@@ -504,7 +505,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
-        16         42 06-FEB-10 Paris                         0                 
+        16          9 06-FEB-10 Paris                         0                 
         16          0 31-AUG-10 Paris                         0                 
         16          1 31-AUG-10 Helsinky                      2                 
         16          2 31-AUG-10 Ylivieska                     1                 
@@ -514,7 +515,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         16          6 31-AUG-10 Inari                         1                 
         16          7 31-AUG-10 Salla                         1                 
         16          8 31-AUG-10 Saarijarvi                    2                 
-        16         42 31-AUG-10 Paris                         0                 
+        16          9 31-AUG-10 Paris                         0                 
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
@@ -528,7 +529,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         17          7 06-FEB-10 Castelo de Vide               1                 
         17          8 06-FEB-10 Evora                         2                 
         17          9 06-FEB-10 Faro                          1                 
-        17         42 06-FEB-10 Lisbonne                      0                 
+        17         10 06-FEB-10 Lisbonne                      0                 
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
@@ -542,7 +543,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         17          7 16-FEB-10 Castelo de Vide               1                 
         17          8 16-FEB-10 Evora                         2                 
         17          9 16-FEB-10 Faro                          1                 
-        17         42 16-FEB-10 Lisbonne                      0                 
+        17         10 16-FEB-10 Lisbonne                      0                 
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
@@ -556,7 +557,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         17          7 26-FEB-10 Castelo de Vide               1                 
         17          8 26-FEB-10 Evora                         2                 
         17          9 26-FEB-10 Faro                          1                 
-        17         42 26-FEB-10 Lisbonne                      0                 
+        17         10 26-FEB-10 Lisbonne                      0                 
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
@@ -570,7 +571,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         17          7 31-DEC-10 Castelo de Vide               1                 
         17          8 31-DEC-10 Evora                         2                 
         17          9 31-DEC-10 Faro                          1                 
-        17         42 31-DEC-10 Lisbonne                      0                 
+        17         10 31-DEC-10 Lisbonne                      0                 
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
@@ -580,7 +581,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         18          3 30-APR-10 Ravenne                       2                 
         18          4 30-APR-10 Verone                        1                 
         18          5 30-APR-10 Venise                        3                 
-        18         42 30-APR-10 Paris                         0                 
+        18          6 30-APR-10 Paris                         0                 
         18          0 30-JUL-10 Paris                         0                 
         18          1 30-JUL-10 Rome                          3                 
         18          2 30-JUL-10 Florence                      3                 
@@ -590,14 +591,14 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
 ---------- ---------- --------- -------------------- ----------                 
         18          4 30-JUL-10 Verone                        1                 
         18          5 30-JUL-10 Venise                        3                 
-        18         42 30-JUL-10 Paris                         0                 
+        18          6 30-JUL-10 Paris                         0                 
         18          0 06-OCT-10 Paris                         0                 
         18          1 06-OCT-10 Rome                          3                 
         18          2 06-OCT-10 Florence                      3                 
         18          3 06-OCT-10 Ravenne                       2                 
         18          4 06-OCT-10 Verone                        1                 
         18          5 06-OCT-10 Venise                        3                 
-        18         42 06-OCT-10 Paris                         0                 
+        18          6 06-OCT-10 Paris                         0                 
         18          0 06-DEC-10 Paris                         0                 
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
@@ -607,7 +608,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         18          3 06-DEC-10 Ravenne                       2                 
         18          4 06-DEC-10 Verone                        1                 
         18          5 06-DEC-10 Venise                        3                 
-        18         42 06-DEC-10 Paris                         0                 
+        18          6 06-DEC-10 Paris                         0                 
         19          0 06-FEB-10 Rome                          0                 
         19          1 06-FEB-10 Rome                          2                 
         19          2 06-FEB-10 Naples                        1                 
@@ -625,7 +626,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         19         11 06-FEB-10 Bari                          2                 
         19         12 06-FEB-10 Benevento                     2                 
         19         13 06-FEB-10 Caserte                       2                 
-        19         42 06-FEB-10 Rome                          0                 
+        19         14 06-FEB-10 Rome                          0                 
         19          0 15-APR-10 Rome                          0                 
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
@@ -646,7 +647,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
 ---------- ---------- --------- -------------------- ----------                 
         19         12 15-APR-10 Benevento                     2                 
         19         13 15-APR-10 Caserte                       2                 
-        19         42 15-APR-10 Rome                          0                 
+        19         14 15-APR-10 Rome                          0                 
         19          0 05-AUG-10 Rome                          0                 
         19          1 05-AUG-10 Rome                          2                 
         19          2 05-AUG-10 Naples                        1                 
@@ -664,7 +665,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         19         11 05-AUG-10 Bari                          2                 
         19         12 05-AUG-10 Benevento                     2                 
         19         13 05-AUG-10 Caserte                       2                 
-        19         42 05-AUG-10 Rome                          0                 
+        19         14 05-AUG-10 Rome                          0                 
         19          0 06-SEP-10 Rome                          0                 
         19          1 06-SEP-10 Rome                          2                 
         19          2 06-SEP-10 Naples                        1                 
@@ -682,7 +683,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         19         11 06-SEP-10 Bari                          2                 
         19         12 06-SEP-10 Benevento                     2                 
         19         13 06-SEP-10 Caserte                       2                 
-        19         42 06-SEP-10 Rome                          0                 
+        19         14 06-SEP-10 Rome                          0                 
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
@@ -703,7 +704,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         19         11 16-SEP-10 Bari                          2                 
         19         12 16-SEP-10 Benevento                     2                 
         19         13 16-SEP-10 Caserte                       2                 
-        19         42 16-SEP-10 Rome                          0                 
+        19         14 16-SEP-10 Rome                          0                 
         19          0 10-DEC-10 Rome                          0                 
         19          1 10-DEC-10 Rome                          2                 
         19          2 10-DEC-10 Naples                        1                 
@@ -721,7 +722,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         19         11 10-DEC-10 Bari                          2                 
         19         12 10-DEC-10 Benevento                     2                 
         19         13 10-DEC-10 Caserte                       2                 
-        19         42 10-DEC-10 Rome                          0                 
+        19         14 10-DEC-10 Rome                          0                 
         19          0 20-DEC-10 Rome                          0                 
         19          1 20-DEC-10 Rome                          2                 
         19          2 20-DEC-10 Naples                        1                 
@@ -742,31 +743,31 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
-        19         42 20-DEC-10 Rome                          0                 
+        19         14 20-DEC-10 Rome                          0                 
         20          0 22-DEC-09 Briancon                      0                 
         20          1 22-DEC-09 Briancon                      6                 
-        20         42 22-DEC-09 Briancon                      0                 
+        20          2 22-DEC-09 Briancon                      0                 
         20          0 20-JAN-10 Briancon                      0                 
         20          1 20-JAN-10 Briancon                      6                 
-        20         42 20-JAN-10 Briancon                      0                 
+        20          2 20-JAN-10 Briancon                      0                 
         20          0 27-JAN-10 Briancon                      0                 
         20          1 27-JAN-10 Briancon                      6                 
-        20         42 27-JAN-10 Briancon                      0                 
+        20          2 27-JAN-10 Briancon                      0                 
         20          0 02-FEB-10 Briancon                      0                 
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
         20          1 02-FEB-10 Briancon                      6                 
-        20         42 02-FEB-10 Briancon                      0                 
+        20          2 02-FEB-10 Briancon                      0                 
         20          0 06-FEB-10 Briancon                      0                 
         20          1 06-FEB-10 Briancon                      6                 
-        20         42 06-FEB-10 Briancon                      0                 
+        20          2 06-FEB-10 Briancon                      0                 
         20          0 01-APR-10 Briancon                      0                 
         20          1 01-APR-10 Briancon                      6                 
-        20         42 01-APR-10 Briancon                      0                 
+        20          2 01-APR-10 Briancon                      0                 
         20          0 03-APR-10 Briancon                      0                 
         20          1 03-APR-10 Briancon                      6                 
-        20         42 03-APR-10 Briancon                      0                 
+        20          2 03-APR-10 Briancon                      0                 
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
@@ -787,7 +788,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         21         11 15-JAN-10 Ravenne                       2                 
         21         12 15-JAN-10 Verone                        1                 
         21         13 15-JAN-10 Venise                        3                 
-        21         42 15-JAN-10 Rome                          0                 
+        21         14 15-JAN-10 Rome                          0                 
         21          0 25-JAN-10 Paris                         0                 
         21          1 25-JAN-10 Helsinky                      2                 
         21          2 25-JAN-10 Ylivieska                     1                 
@@ -805,7 +806,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         21         11 25-JAN-10 Ravenne                       2                 
         21         12 25-JAN-10 Verone                        1                 
         21         13 25-JAN-10 Venise                        3                 
-        21         42 25-JAN-10 Rome                          0                 
+        21         14 25-JAN-10 Rome                          0                 
         21          0 26-FEB-10 Paris                         0                 
         21          1 26-FEB-10 Helsinky                      2                 
         21          2 26-FEB-10 Ylivieska                     1                 
@@ -826,7 +827,7 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
 
       NUMC       RANG DATEDEP   VILLES                  NBJOURS                 
 ---------- ---------- --------- -------------------- ----------                 
-        21         42 26-FEB-10 Rome                          0                 
+        21         14 26-FEB-10 Rome                          0                 
         21          0 06-APR-10 Paris                         0                 
         21          1 06-APR-10 Helsinky                      2                 
         21          2 06-APR-10 Ylivieska                     1                 
@@ -844,808 +845,8 @@ SQL> select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
         21         11 06-APR-10 Ravenne                       2                 
         21         12 06-APR-10 Verone                        1                 
         21         13 06-APR-10 Venise                        3                 
-        21         42 06-APR-10 Rome                          0                 
+        21         14 06-APR-10 Rome                          0                 
 
 654 rows selected.
 
-SQL> select R4.numc, R4.rang, R4.datedep, V.pays, R4.nbjours
-  2  	from (
-  3  		select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
-  4  			from (
-  5  				select numc, 0 as rang, vDep as villes, 0 as nbjours --R1
-  6  					from agence.lescircuits
-  7  				union
-  8  				select numc, 42, varr, 0	--R2
-  9  					from agence.lescircuits
- 10  				union
- 11  				select numc, rang, vetape, nbjours
- 12  					from agence.lesetapes
- 13  				) R3 join agence.lesprogrammations P
- 14  					on (R3.numc=P.numc)
- 15  			order by P.numc, P.datedep, R3.rang
- 16  		) R4 join agence.lesvilles V on (V.nomv=R4.villes)
- 17  	order by R4.numc, R4.datedep, R4.rang;
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-         1          0 04-JAN-10 France                        0                 
-         1          1 04-JAN-10 Angleterre                    2                 
-         1         42 04-JAN-10 France                        0                 
-         1          0 04-FEB-10 France                        0                 
-         1          1 04-FEB-10 Angleterre                    2                 
-         1         42 04-FEB-10 France                        0                 
-         1          0 06-FEB-10 France                        0                 
-         1          1 06-FEB-10 Angleterre                    2                 
-         1         42 06-FEB-10 France                        0                 
-         1          0 21-JUL-10 France                        0                 
-         1          1 21-JUL-10 Angleterre                    2                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-         1         42 21-JUL-10 France                        0                 
-         1          0 24-JUL-10 France                        0                 
-         1          1 24-JUL-10 Angleterre                    2                 
-         1         42 24-JUL-10 France                        0                 
-         2          0 06-JAN-10 France                        0                 
-         2          1 06-JAN-10 Angleterre                    2                 
-         2         42 06-JAN-10 France                        0                 
-         2          0 07-JAN-10 France                        0                 
-         2          1 07-JAN-10 Angleterre                    2                 
-         2         42 07-JAN-10 France                        0                 
-         2          0 05-FEB-10 France                        0                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-         2          1 05-FEB-10 Angleterre                    2                 
-         2         42 05-FEB-10 France                        0                 
-         2          0 06-FEB-10 France                        0                 
-         2          1 06-FEB-10 Angleterre                    2                 
-         2         42 06-FEB-10 France                        0                 
-         2          0 05-SEP-10 France                        0                 
-         2          1 05-SEP-10 Angleterre                    2                 
-         2         42 05-SEP-10 France                        0                 
-         3          0 24-DEC-09 France                        0                 
-         3          1 24-DEC-09 Hollande                      3                 
-         3         42 24-DEC-09 France                        0                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-         3          0 31-DEC-09 France                        0                 
-         3          1 31-DEC-09 Hollande                      3                 
-         3         42 31-DEC-09 France                        0                 
-         3          0 03-JUL-10 France                        0                 
-         3          1 03-JUL-10 Hollande                      3                 
-         3         42 03-JUL-10 France                        0                 
-         4          0 30-JUN-10 France                        0                 
-         4          1 30-JUN-10 Hollande                      4                 
-         4         42 30-JUN-10 France                        0                 
-         4          0 06-AUG-10 France                        0                 
-         4          1 06-AUG-10 Hollande                      4                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-         4         42 06-AUG-10 France                        0                 
-         4          0 31-AUG-10 France                        0                 
-         4          1 31-AUG-10 Hollande                      4                 
-         4         42 31-AUG-10 France                        0                 
-         4          0 06-NOV-10 France                        0                 
-         4          1 06-NOV-10 Hollande                      4                 
-         4         42 06-NOV-10 France                        0                 
-         5          0 31-AUG-10 France                        0                 
-         5          1 31-AUG-10 Italie                        5                 
-         5         42 31-AUG-10 France                        0                 
-         5          0 06-NOV-10 France                        0                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-         5          1 06-NOV-10 Italie                        5                 
-         5         42 06-NOV-10 France                        0                 
-         6          0 06-FEB-10 France                        0                 
-         6          1 06-FEB-10 Italie                        4                 
-         6         42 06-FEB-10 France                        0                 
-         6          0 06-SEP-10 France                        0                 
-         6          1 06-SEP-10 Italie                        4                 
-         6         42 06-SEP-10 France                        0                 
-         6          0 06-OCT-10 France                        0                 
-         6          1 06-OCT-10 Italie                        4                 
-         6         42 06-OCT-10 France                        0                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-         6          0 16-NOV-10 France                        0                 
-         6          1 16-NOV-10 Italie                        4                 
-         6         42 16-NOV-10 France                        0                 
-         7          0 16-DEC-09 France                        0                 
-         7          1 16-DEC-09 France                        2                 
-         7          2 16-DEC-09 France                        2                 
-         7          3 16-DEC-09 France                        1                 
-         7          4 16-DEC-09 France                        1                 
-         7          5 16-DEC-09 France                        1                 
-         7         42 16-DEC-09 France                        0                 
-         7          0 06-JAN-10 France                        0                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-         7          1 06-JAN-10 France                        2                 
-         7          2 06-JAN-10 France                        2                 
-         7          3 06-JAN-10 France                        1                 
-         7          4 06-JAN-10 France                        1                 
-         7          5 06-JAN-10 France                        1                 
-         7         42 06-JAN-10 France                        0                 
-         7          0 26-FEB-10 France                        0                 
-         7          1 26-FEB-10 France                        2                 
-         7          2 26-FEB-10 France                        2                 
-         7          3 26-FEB-10 France                        1                 
-         7          4 26-FEB-10 France                        1                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-         7          5 26-FEB-10 France                        1                 
-         7         42 26-FEB-10 France                        0                 
-         7          0 31-AUG-10 France                        0                 
-         7          1 31-AUG-10 France                        2                 
-         7          2 31-AUG-10 France                        2                 
-         7          3 31-AUG-10 France                        1                 
-         7          4 31-AUG-10 France                        1                 
-         7          5 31-AUG-10 France                        1                 
-         7         42 31-AUG-10 France                        0                 
-         7          0 31-OCT-10 France                        0                 
-         7          1 31-OCT-10 France                        2                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-         7          2 31-OCT-10 France                        2                 
-         7          3 31-OCT-10 France                        1                 
-         7          4 31-OCT-10 France                        1                 
-         7          5 31-OCT-10 France                        1                 
-         7         42 31-OCT-10 France                        0                 
-         8          0 24-DEC-09 France                        0                 
-         8          1 24-DEC-09 France                        2                 
-         8          2 24-DEC-09 France                        3                 
-         8          3 24-DEC-09 France                        2                 
-         8         42 24-DEC-09 France                        0                 
-         8          0 31-DEC-09 France                        0                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-         8          1 31-DEC-09 France                        2                 
-         8          2 31-DEC-09 France                        3                 
-         8          3 31-DEC-09 France                        2                 
-         8         42 31-DEC-09 France                        0                 
-         8          0 14-FEB-10 France                        0                 
-         8          1 14-FEB-10 France                        2                 
-         8          2 14-FEB-10 France                        3                 
-         8          3 14-FEB-10 France                        2                 
-         8         42 14-FEB-10 France                        0                 
-         8          0 16-FEB-10 France                        0                 
-         8          1 16-FEB-10 France                        2                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-         8          2 16-FEB-10 France                        3                 
-         8          3 16-FEB-10 France                        2                 
-         8         42 16-FEB-10 France                        0                 
-         8          0 21-FEB-10 France                        0                 
-         8          1 21-FEB-10 France                        2                 
-         8          2 21-FEB-10 France                        3                 
-         8          3 21-FEB-10 France                        2                 
-         8         42 21-FEB-10 France                        0                 
-         8          0 28-FEB-10 France                        0                 
-         8          1 28-FEB-10 France                        2                 
-         8          2 28-FEB-10 France                        3                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-         8          3 28-FEB-10 France                        2                 
-         8         42 28-FEB-10 France                        0                 
-         8          0 26-APR-10 France                        0                 
-         8          1 26-APR-10 France                        2                 
-         8          2 26-APR-10 France                        3                 
-         8          3 26-APR-10 France                        2                 
-         8         42 26-APR-10 France                        0                 
-         8          0 16-MAY-10 France                        0                 
-         8          1 16-MAY-10 France                        2                 
-         8          2 16-MAY-10 France                        3                 
-         8          3 16-MAY-10 France                        2                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-         8         42 16-MAY-10 France                        0                 
-         8          0 21-JUL-10 France                        0                 
-         8          1 21-JUL-10 France                        2                 
-         8          2 21-JUL-10 France                        3                 
-         8          3 21-JUL-10 France                        2                 
-         8         42 21-JUL-10 France                        0                 
-         8          0 31-AUG-10 France                        0                 
-         8          1 31-AUG-10 France                        2                 
-         8          2 31-AUG-10 France                        3                 
-         8          3 31-AUG-10 France                        2                 
-         8         42 31-AUG-10 France                        0                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-         8          0 14-NOV-10 France                        0                 
-         8          1 14-NOV-10 France                        2                 
-         8          2 14-NOV-10 France                        3                 
-         8          3 14-NOV-10 France                        2                 
-         8         42 14-NOV-10 France                        0                 
-         9          0 06-FEB-10 France                        0                 
-         9          1 06-FEB-10 Angleterre                    2                 
-         9          2 06-FEB-10 Angleterre                    2                 
-         9          3 06-FEB-10 Angleterre                    1                 
-         9          4 06-FEB-10 Angleterre                    1                 
-         9          5 06-FEB-10 Angleterre                    1                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-         9          6 06-FEB-10 Angleterre                    1                 
-         9         42 06-FEB-10 France                        0                 
-         9          0 30-OCT-10 France                        0                 
-         9          1 30-OCT-10 Angleterre                    2                 
-         9          2 30-OCT-10 Angleterre                    2                 
-         9          3 30-OCT-10 Angleterre                    1                 
-         9          4 30-OCT-10 Angleterre                    1                 
-         9          5 30-OCT-10 Angleterre                    1                 
-         9          6 30-OCT-10 Angleterre                    1                 
-         9         42 30-OCT-10 France                        0                 
-        10          0 01-JAN-10 Irlande                       0                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        10          1 01-JAN-10 Irlande                       1                 
-        10          2 01-JAN-10 Irlande                       3                 
-        10          3 01-JAN-10 Irlande                       2                 
-        10          4 01-JAN-10 Irlande                       1                 
-        10          5 01-JAN-10 Irlande                       3                 
-        10          6 01-JAN-10 Irlande                       2                 
-        10          7 01-JAN-10 Irlande                       1                 
-        10         42 01-JAN-10 Irlande                       0                 
-        10          0 21-JAN-10 Irlande                       0                 
-        10          1 21-JAN-10 Irlande                       1                 
-        10          2 21-JAN-10 Irlande                       3                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        10          3 21-JAN-10 Irlande                       2                 
-        10          4 21-JAN-10 Irlande                       1                 
-        10          5 21-JAN-10 Irlande                       3                 
-        10          6 21-JAN-10 Irlande                       2                 
-        10          7 21-JAN-10 Irlande                       1                 
-        10         42 21-JAN-10 Irlande                       0                 
-        10          0 11-FEB-10 Irlande                       0                 
-        10          1 11-FEB-10 Irlande                       1                 
-        10          2 11-FEB-10 Irlande                       3                 
-        10          3 11-FEB-10 Irlande                       2                 
-        10          4 11-FEB-10 Irlande                       1                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        10          5 11-FEB-10 Irlande                       3                 
-        10          6 11-FEB-10 Irlande                       2                 
-        10          7 11-FEB-10 Irlande                       1                 
-        10         42 11-FEB-10 Irlande                       0                 
-        10          0 28-FEB-10 Irlande                       0                 
-        10          1 28-FEB-10 Irlande                       1                 
-        10          2 28-FEB-10 Irlande                       3                 
-        10          3 28-FEB-10 Irlande                       2                 
-        10          4 28-FEB-10 Irlande                       1                 
-        10          5 28-FEB-10 Irlande                       3                 
-        10          6 28-FEB-10 Irlande                       2                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        10          7 28-FEB-10 Irlande                       1                 
-        10         42 28-FEB-10 Irlande                       0                 
-        11          0 06-FEB-10 Irlande                       0                 
-        11          1 06-FEB-10 Irlande                       2                 
-        11          2 06-FEB-10 Irlande                       2                 
-        11          3 06-FEB-10 Irlande                       2                 
-        11          4 06-FEB-10 Irlande                       1                 
-        11          5 06-FEB-10 Irlande                       2                 
-        11          6 06-FEB-10 Irlande                       2                 
-        11          7 06-FEB-10 Irlande                       2                 
-        11         42 06-FEB-10 Irlande                       0                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        11          0 28-FEB-10 Irlande                       0                 
-        11          1 28-FEB-10 Irlande                       2                 
-        11          2 28-FEB-10 Irlande                       2                 
-        11          3 28-FEB-10 Irlande                       2                 
-        11          4 28-FEB-10 Irlande                       1                 
-        11          5 28-FEB-10 Irlande                       2                 
-        11          6 28-FEB-10 Irlande                       2                 
-        11          7 28-FEB-10 Irlande                       2                 
-        11         42 28-FEB-10 Irlande                       0                 
-        11          0 29-MAY-10 Irlande                       0                 
-        11          1 29-MAY-10 Irlande                       2                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        11          2 29-MAY-10 Irlande                       2                 
-        11          3 29-MAY-10 Irlande                       2                 
-        11          4 29-MAY-10 Irlande                       1                 
-        11          5 29-MAY-10 Irlande                       2                 
-        11          6 29-MAY-10 Irlande                       2                 
-        11          7 29-MAY-10 Irlande                       2                 
-        11         42 29-MAY-10 Irlande                       0                 
-        11          0 30-JUN-10 Irlande                       0                 
-        11          1 30-JUN-10 Irlande                       2                 
-        11          2 30-JUN-10 Irlande                       2                 
-        11          3 30-JUN-10 Irlande                       2                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        11          4 30-JUN-10 Irlande                       1                 
-        11          5 30-JUN-10 Irlande                       2                 
-        11          6 30-JUN-10 Irlande                       2                 
-        11          7 30-JUN-10 Irlande                       2                 
-        11         42 30-JUN-10 Irlande                       0                 
-        12          0 06-FEB-10 Irlande                       0                 
-        12          1 06-FEB-10 Irlande                       1                 
-        12          2 06-FEB-10 Irlande                       2                 
-        12          3 06-FEB-10 Irlande                       2                 
-        12          4 06-FEB-10 Irlande                       2                 
-        12          5 06-FEB-10 Irlande                       2                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        12          6 06-FEB-10 Irlande                       1                 
-        12          7 06-FEB-10 Irlande                       2                 
-        12         42 06-FEB-10 Irlande                       0                 
-        13          0 31-DEC-09 France                        0                 
-        13          1 31-DEC-09 Danemark                      4                 
-        13          2 31-DEC-09 Groenland                     2                 
-        13          3 31-DEC-09 Groenland                     2                 
-        13          4 31-DEC-09 Groenland                     1                 
-        13          5 31-DEC-09 Groenland                     2                 
-        13          6 31-DEC-09 Groenland                     1                 
-        13          7 31-DEC-09 Groenland                     4                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        13          8 31-DEC-09 Groenland                     2                 
-        13         42 31-DEC-09 France                        0                 
-        13          0 01-JAN-10 France                        0                 
-        13          1 01-JAN-10 Danemark                      4                 
-        13          2 01-JAN-10 Groenland                     2                 
-        13          3 01-JAN-10 Groenland                     2                 
-        13          4 01-JAN-10 Groenland                     1                 
-        13          5 01-JAN-10 Groenland                     2                 
-        13          6 01-JAN-10 Groenland                     1                 
-        13          7 01-JAN-10 Groenland                     4                 
-        13          8 01-JAN-10 Groenland                     2                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        13         42 01-JAN-10 France                        0                 
-        13          0 06-FEB-10 France                        0                 
-        13          1 06-FEB-10 Danemark                      4                 
-        13          2 06-FEB-10 Groenland                     2                 
-        13          3 06-FEB-10 Groenland                     2                 
-        13          4 06-FEB-10 Groenland                     1                 
-        13          5 06-FEB-10 Groenland                     2                 
-        13          6 06-FEB-10 Groenland                     1                 
-        13          7 06-FEB-10 Groenland                     4                 
-        13          8 06-FEB-10 Groenland                     2                 
-        13         42 06-FEB-10 France                        0                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        13          0 30-APR-10 France                        0                 
-        13          1 30-APR-10 Danemark                      4                 
-        13          2 30-APR-10 Groenland                     2                 
-        13          3 30-APR-10 Groenland                     2                 
-        13          4 30-APR-10 Groenland                     1                 
-        13          5 30-APR-10 Groenland                     2                 
-        13          6 30-APR-10 Groenland                     1                 
-        13          7 30-APR-10 Groenland                     4                 
-        13          8 30-APR-10 Groenland                     2                 
-        13         42 30-APR-10 France                        0                 
-        13          0 06-MAY-10 France                        0                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        13          1 06-MAY-10 Danemark                      4                 
-        13          2 06-MAY-10 Groenland                     2                 
-        13          3 06-MAY-10 Groenland                     2                 
-        13          4 06-MAY-10 Groenland                     1                 
-        13          5 06-MAY-10 Groenland                     2                 
-        13          6 06-MAY-10 Groenland                     1                 
-        13          7 06-MAY-10 Groenland                     4                 
-        13          8 06-MAY-10 Groenland                     2                 
-        13         42 06-MAY-10 France                        0                 
-        13          0 31-MAY-10 France                        0                 
-        13          1 31-MAY-10 Danemark                      4                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        13          2 31-MAY-10 Groenland                     2                 
-        13          3 31-MAY-10 Groenland                     2                 
-        13          4 31-MAY-10 Groenland                     1                 
-        13          5 31-MAY-10 Groenland                     2                 
-        13          6 31-MAY-10 Groenland                     1                 
-        13          7 31-MAY-10 Groenland                     4                 
-        13          8 31-MAY-10 Groenland                     2                 
-        13         42 31-MAY-10 France                        0                 
-        13          0 30-JUN-10 France                        0                 
-        13          1 30-JUN-10 Danemark                      4                 
-        13          2 30-JUN-10 Groenland                     2                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        13          3 30-JUN-10 Groenland                     2                 
-        13          4 30-JUN-10 Groenland                     1                 
-        13          5 30-JUN-10 Groenland                     2                 
-        13          6 30-JUN-10 Groenland                     1                 
-        13          7 30-JUN-10 Groenland                     4                 
-        13          8 30-JUN-10 Groenland                     2                 
-        13         42 30-JUN-10 France                        0                 
-        13          0 31-DEC-10 France                        0                 
-        13          1 31-DEC-10 Danemark                      4                 
-        13          2 31-DEC-10 Groenland                     2                 
-        13          3 31-DEC-10 Groenland                     2                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        13          4 31-DEC-10 Groenland                     1                 
-        13          5 31-DEC-10 Groenland                     2                 
-        13          6 31-DEC-10 Groenland                     1                 
-        13          7 31-DEC-10 Groenland                     4                 
-        13          8 31-DEC-10 Groenland                     2                 
-        13         42 31-DEC-10 France                        0                 
-        14          0 06-JUL-10 Islande                       0                 
-        14          1 06-JUL-10 Islande                       3                 
-        14          2 06-JUL-10 Islande                       2                 
-        14          3 06-JUL-10 Islande                       2                 
-        14          4 06-JUL-10 Islande                       2                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        14          5 06-JUL-10 Islande                       2                 
-        14          6 06-JUL-10 Islande                       2                 
-        14          7 06-JUL-10 Islande                       2                 
-        14         42 06-JUL-10 Islande                       0                 
-        14          0 26-JUL-10 Islande                       0                 
-        14          1 26-JUL-10 Islande                       3                 
-        14          2 26-JUL-10 Islande                       2                 
-        14          3 26-JUL-10 Islande                       2                 
-        14          4 26-JUL-10 Islande                       2                 
-        14          5 26-JUL-10 Islande                       2                 
-        14          6 26-JUL-10 Islande                       2                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        14          7 26-JUL-10 Islande                       2                 
-        14         42 26-JUL-10 Islande                       0                 
-        15          0 06-FEB-10 France                        0                 
-        15          1 06-FEB-10 Islande                       2                 
-        15          2 06-FEB-10 Islande                       2                 
-        15          3 06-FEB-10 Islande                       2                 
-        15          4 06-FEB-10 Islande                       2                 
-        15         42 06-FEB-10 France                        0                 
-        15          0 31-AUG-10 France                        0                 
-        15          1 31-AUG-10 Islande                       2                 
-        15          2 31-AUG-10 Islande                       2                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        15          3 31-AUG-10 Islande                       2                 
-        15          4 31-AUG-10 Islande                       2                 
-        15         42 31-AUG-10 France                        0                 
-        16          0 06-JAN-10 France                        0                 
-        16          1 06-JAN-10 Finlande                      2                 
-        16          2 06-JAN-10 Norvege                       1                 
-        16          3 06-JAN-10 Norvege                       1                 
-        16          4 06-JAN-10 Norvege                       1                 
-        16          5 06-JAN-10 Norvege                       1                 
-        16          6 06-JAN-10 Norvege                       1                 
-        16          7 06-JAN-10 Norvege                       1                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        16          8 06-JAN-10 Norvege                       2                 
-        16         42 06-JAN-10 France                        0                 
-        16          0 06-FEB-10 France                        0                 
-        16          1 06-FEB-10 Finlande                      2                 
-        16          2 06-FEB-10 Norvege                       1                 
-        16          3 06-FEB-10 Norvege                       1                 
-        16          4 06-FEB-10 Norvege                       1                 
-        16          5 06-FEB-10 Norvege                       1                 
-        16          6 06-FEB-10 Norvege                       1                 
-        16          7 06-FEB-10 Norvege                       1                 
-        16          8 06-FEB-10 Norvege                       2                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        16         42 06-FEB-10 France                        0                 
-        16          0 31-AUG-10 France                        0                 
-        16          1 31-AUG-10 Finlande                      2                 
-        16          2 31-AUG-10 Norvege                       1                 
-        16          3 31-AUG-10 Norvege                       1                 
-        16          4 31-AUG-10 Norvege                       1                 
-        16          5 31-AUG-10 Norvege                       1                 
-        16          6 31-AUG-10 Norvege                       1                 
-        16          7 31-AUG-10 Norvege                       1                 
-        16          8 31-AUG-10 Norvege                       2                 
-        16         42 31-AUG-10 France                        0                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        17          0 06-FEB-10 Portugal                      0                 
-        17          1 06-FEB-10 Portugal                      2                 
-        17          2 06-FEB-10 Portugal                      1                 
-        17          3 06-FEB-10 Portugal                      2                 
-        17          4 06-FEB-10 Portugal                      2                 
-        17          5 06-FEB-10 Portugal                      1                 
-        17          6 06-FEB-10 Portugal                      2                 
-        17          7 06-FEB-10 Portugal                      1                 
-        17          8 06-FEB-10 Portugal                      2                 
-        17          9 06-FEB-10 Portugal                      1                 
-        17         42 06-FEB-10 Portugal                      0                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        17          0 16-FEB-10 Portugal                      0                 
-        17          1 16-FEB-10 Portugal                      2                 
-        17          2 16-FEB-10 Portugal                      1                 
-        17          3 16-FEB-10 Portugal                      2                 
-        17          4 16-FEB-10 Portugal                      2                 
-        17          5 16-FEB-10 Portugal                      1                 
-        17          6 16-FEB-10 Portugal                      2                 
-        17          7 16-FEB-10 Portugal                      1                 
-        17          8 16-FEB-10 Portugal                      2                 
-        17          9 16-FEB-10 Portugal                      1                 
-        17         42 16-FEB-10 Portugal                      0                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        17          0 26-FEB-10 Portugal                      0                 
-        17          1 26-FEB-10 Portugal                      2                 
-        17          2 26-FEB-10 Portugal                      1                 
-        17          3 26-FEB-10 Portugal                      2                 
-        17          4 26-FEB-10 Portugal                      2                 
-        17          5 26-FEB-10 Portugal                      1                 
-        17          6 26-FEB-10 Portugal                      2                 
-        17          7 26-FEB-10 Portugal                      1                 
-        17          8 26-FEB-10 Portugal                      2                 
-        17          9 26-FEB-10 Portugal                      1                 
-        17         42 26-FEB-10 Portugal                      0                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        17          0 31-DEC-10 Portugal                      0                 
-        17          1 31-DEC-10 Portugal                      2                 
-        17          2 31-DEC-10 Portugal                      1                 
-        17          3 31-DEC-10 Portugal                      2                 
-        17          4 31-DEC-10 Portugal                      2                 
-        17          5 31-DEC-10 Portugal                      1                 
-        17          6 31-DEC-10 Portugal                      2                 
-        17          7 31-DEC-10 Portugal                      1                 
-        17          8 31-DEC-10 Portugal                      2                 
-        17          9 31-DEC-10 Portugal                      1                 
-        17         42 31-DEC-10 Portugal                      0                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        18          0 30-APR-10 France                        0                 
-        18          1 30-APR-10 Italie                        3                 
-        18          2 30-APR-10 Italie                        3                 
-        18          3 30-APR-10 Italie                        2                 
-        18          4 30-APR-10 Italie                        1                 
-        18          5 30-APR-10 Italie                        3                 
-        18         42 30-APR-10 France                        0                 
-        18          0 30-JUL-10 France                        0                 
-        18          1 30-JUL-10 Italie                        3                 
-        18          2 30-JUL-10 Italie                        3                 
-        18          3 30-JUL-10 Italie                        2                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        18          4 30-JUL-10 Italie                        1                 
-        18          5 30-JUL-10 Italie                        3                 
-        18         42 30-JUL-10 France                        0                 
-        18          0 06-OCT-10 France                        0                 
-        18          1 06-OCT-10 Italie                        3                 
-        18          2 06-OCT-10 Italie                        3                 
-        18          3 06-OCT-10 Italie                        2                 
-        18          4 06-OCT-10 Italie                        1                 
-        18          5 06-OCT-10 Italie                        3                 
-        18         42 06-OCT-10 France                        0                 
-        18          0 06-DEC-10 France                        0                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        18          1 06-DEC-10 Italie                        3                 
-        18          2 06-DEC-10 Italie                        3                 
-        18          3 06-DEC-10 Italie                        2                 
-        18          4 06-DEC-10 Italie                        1                 
-        18          5 06-DEC-10 Italie                        3                 
-        18         42 06-DEC-10 France                        0                 
-        19          0 06-FEB-10 Italie                        0                 
-        19          1 06-FEB-10 Italie                        2                 
-        19          2 06-FEB-10 Italie                        1                 
-        19          3 06-FEB-10 Italie                        1                 
-        19          4 06-FEB-10 Italie                        1                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        19          5 06-FEB-10 Italie                        1                 
-        19          6 06-FEB-10 Italie                        2                 
-        19          7 06-FEB-10 Italie                        1                 
-        19          8 06-FEB-10 Italie                        1                 
-        19          9 06-FEB-10 Italie                        1                 
-        19         10 06-FEB-10 Italie                        1                 
-        19         11 06-FEB-10 Italie                        2                 
-        19         12 06-FEB-10 Italie                        2                 
-        19         13 06-FEB-10 Italie                        2                 
-        19         42 06-FEB-10 Italie                        0                 
-        19          0 15-APR-10 Italie                        0                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        19          1 15-APR-10 Italie                        2                 
-        19          2 15-APR-10 Italie                        1                 
-        19          3 15-APR-10 Italie                        1                 
-        19          4 15-APR-10 Italie                        1                 
-        19          5 15-APR-10 Italie                        1                 
-        19          6 15-APR-10 Italie                        2                 
-        19          7 15-APR-10 Italie                        1                 
-        19          8 15-APR-10 Italie                        1                 
-        19          9 15-APR-10 Italie                        1                 
-        19         10 15-APR-10 Italie                        1                 
-        19         11 15-APR-10 Italie                        2                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        19         12 15-APR-10 Italie                        2                 
-        19         13 15-APR-10 Italie                        2                 
-        19         42 15-APR-10 Italie                        0                 
-        19          0 05-AUG-10 Italie                        0                 
-        19          1 05-AUG-10 Italie                        2                 
-        19          2 05-AUG-10 Italie                        1                 
-        19          3 05-AUG-10 Italie                        1                 
-        19          4 05-AUG-10 Italie                        1                 
-        19          5 05-AUG-10 Italie                        1                 
-        19          6 05-AUG-10 Italie                        2                 
-        19          7 05-AUG-10 Italie                        1                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        19          8 05-AUG-10 Italie                        1                 
-        19          9 05-AUG-10 Italie                        1                 
-        19         10 05-AUG-10 Italie                        1                 
-        19         11 05-AUG-10 Italie                        2                 
-        19         12 05-AUG-10 Italie                        2                 
-        19         13 05-AUG-10 Italie                        2                 
-        19         42 05-AUG-10 Italie                        0                 
-        19          0 06-SEP-10 Italie                        0                 
-        19          1 06-SEP-10 Italie                        2                 
-        19          2 06-SEP-10 Italie                        1                 
-        19          3 06-SEP-10 Italie                        1                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        19          4 06-SEP-10 Italie                        1                 
-        19          5 06-SEP-10 Italie                        1                 
-        19          6 06-SEP-10 Italie                        2                 
-        19          7 06-SEP-10 Italie                        1                 
-        19          8 06-SEP-10 Italie                        1                 
-        19          9 06-SEP-10 Italie                        1                 
-        19         10 06-SEP-10 Italie                        1                 
-        19         11 06-SEP-10 Italie                        2                 
-        19         12 06-SEP-10 Italie                        2                 
-        19         13 06-SEP-10 Italie                        2                 
-        19         42 06-SEP-10 Italie                        0                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        19          0 16-SEP-10 Italie                        0                 
-        19          1 16-SEP-10 Italie                        2                 
-        19          2 16-SEP-10 Italie                        1                 
-        19          3 16-SEP-10 Italie                        1                 
-        19          4 16-SEP-10 Italie                        1                 
-        19          5 16-SEP-10 Italie                        1                 
-        19          6 16-SEP-10 Italie                        2                 
-        19          7 16-SEP-10 Italie                        1                 
-        19          8 16-SEP-10 Italie                        1                 
-        19          9 16-SEP-10 Italie                        1                 
-        19         10 16-SEP-10 Italie                        1                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        19         11 16-SEP-10 Italie                        2                 
-        19         12 16-SEP-10 Italie                        2                 
-        19         13 16-SEP-10 Italie                        2                 
-        19         42 16-SEP-10 Italie                        0                 
-        19          0 10-DEC-10 Italie                        0                 
-        19          1 10-DEC-10 Italie                        2                 
-        19          2 10-DEC-10 Italie                        1                 
-        19          3 10-DEC-10 Italie                        1                 
-        19          4 10-DEC-10 Italie                        1                 
-        19          5 10-DEC-10 Italie                        1                 
-        19          6 10-DEC-10 Italie                        2                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        19          7 10-DEC-10 Italie                        1                 
-        19          8 10-DEC-10 Italie                        1                 
-        19          9 10-DEC-10 Italie                        1                 
-        19         10 10-DEC-10 Italie                        1                 
-        19         11 10-DEC-10 Italie                        2                 
-        19         12 10-DEC-10 Italie                        2                 
-        19         13 10-DEC-10 Italie                        2                 
-        19         42 10-DEC-10 Italie                        0                 
-        19          0 20-DEC-10 Italie                        0                 
-        19          1 20-DEC-10 Italie                        2                 
-        19          2 20-DEC-10 Italie                        1                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        19          3 20-DEC-10 Italie                        1                 
-        19          4 20-DEC-10 Italie                        1                 
-        19          5 20-DEC-10 Italie                        1                 
-        19          6 20-DEC-10 Italie                        2                 
-        19          7 20-DEC-10 Italie                        1                 
-        19          8 20-DEC-10 Italie                        1                 
-        19          9 20-DEC-10 Italie                        1                 
-        19         10 20-DEC-10 Italie                        1                 
-        19         11 20-DEC-10 Italie                        2                 
-        19         12 20-DEC-10 Italie                        2                 
-        19         13 20-DEC-10 Italie                        2                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        19         42 20-DEC-10 Italie                        0                 
-        20          0 22-DEC-09 France                        0                 
-        20          1 22-DEC-09 France                        6                 
-        20         42 22-DEC-09 France                        0                 
-        20          0 20-JAN-10 France                        0                 
-        20          1 20-JAN-10 France                        6                 
-        20         42 20-JAN-10 France                        0                 
-        20          0 27-JAN-10 France                        0                 
-        20          1 27-JAN-10 France                        6                 
-        20         42 27-JAN-10 France                        0                 
-        20          0 02-FEB-10 France                        0                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        20          1 02-FEB-10 France                        6                 
-        20         42 02-FEB-10 France                        0                 
-        20          0 06-FEB-10 France                        0                 
-        20          1 06-FEB-10 France                        6                 
-        20         42 06-FEB-10 France                        0                 
-        20          0 01-APR-10 France                        0                 
-        20          1 01-APR-10 France                        6                 
-        20         42 01-APR-10 France                        0                 
-        20          0 03-APR-10 France                        0                 
-        20          1 03-APR-10 France                        6                 
-        20         42 03-APR-10 France                        0                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        21          0 15-JAN-10 France                        0                 
-        21          1 15-JAN-10 Finlande                      2                 
-        21          2 15-JAN-10 Norvege                       1                 
-        21          3 15-JAN-10 Norvege                       1                 
-        21          4 15-JAN-10 Norvege                       1                 
-        21          5 15-JAN-10 Norvege                       1                 
-        21          6 15-JAN-10 Norvege                       1                 
-        21          7 15-JAN-10 Norvege                       1                 
-        21          8 15-JAN-10 Norvege                       2                 
-        21          9 15-JAN-10 Italie                        3                 
-        21         10 15-JAN-10 Italie                        3                 
-
-      NUMC       RANG DATEDEP   PAYS                    NBJOURS                 
----------- ---------- --------- -------------------- ----------                 
-        21         11 15-JAN-10 Italie                        2                 
-        21         12 15-JAN-10 Italie                        1                 
-        21         13 15-JAN-10 Italie                        3                 
-        21         42 15-JAN-10 Italie                        0                 
-        21          0 25-JAN-10 France                        0                 
-        21          1 25-JAN-10 Finlande                      2                 
-        21          2 25-JAN-10 Norvege                       1                 
-        21          3 25-JAN-10 Norvege                       1                 
-        21          4 25-JAN-10 Norvege                       1                 
-        21          5 25-JAN-10 Norvege                       1                 
-        21          6 25-JAN
+SQL> spool off;

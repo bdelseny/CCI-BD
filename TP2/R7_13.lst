@@ -1,0 +1,308 @@
+SQL> with R5 as (
+  2  	select R4.numc, R4.rang, R4.datedep, V.pays, R4.nbjours
+  3  		from (
+  4  			select P.numc, R3.rang, P.datedep, R3.villes, R3.nbjours
+  5  				from (
+  6  					select numc, 0 as rang, vDep as villes, 0 as nbjours --R1
+  7  						from agence.lescircuits
+  8  					union
+  9  					select C.numc, max(E.rang)+1 as rang, varr, 0 as nbjours	--R2
+ 10  						from agence.lescircuits C join agence.lesetapes E on (C.numc=E.numc)
+ 11  						group by C.numc, varr
+ 12  					union
+ 13  					select numc, rang, vetape, nbjours
+ 14  						from agence.lesetapes
+ 15  					) R3 join agence.lesprogrammations P
+ 16  						on (R3.numc=P.numc)
+ 17  				order by P.numc, P.datedep, R3.rang
+ 18  			) R4 join agence.lesvilles V on (V.nomv=R4.villes)
+ 19  		order by R4.numc, R4.datedep, R4.rang)
+ 20  			select R61.numc, R61.rang, R61.datedep, R61.pays, R61.nbj
+ 21  		from (
+ 22  			select R51.numc, R51.rang, R51.datedep, R51.pays, sum(R52.nbJours) as nbj
+ 23  				from R5 R51 join R5 R52 on (R51.numc=R52.numc and R51.dateDep=R52.dateDep and R51.rang>R52.rang)
+ 24  				group by R51.numc, R51.rang, R51.datedep, R51.pays
+ 25  				union
+ 26  			select *
+ 27  				from R5
+ 28  				where rang=0
+ 29  				order by numc, datedep, rang) R61
+ 30  		join (
+ 31  			select R51.numc, R51.rang, R51.datedep, R51.pays, sum(R52.nbJours) as nbj
+ 32  				from R5 R51 join R5 R52 on (R51.numc=R52.numc and R51.dateDep=R52.dateDep and R51.rang>R52.rang)
+ 33  				group by R51.numc, R51.rang, R51.datedep, R51.pays
+ 34  				union
+ 35  			select *
+ 36  				from R5
+ 37  				where rang=0
+ 38  				order by numc, datedep, rang) R62
+ 39  		on (R61.numc=R62.numc and R61.datedep=R62.datedep and R61.pays!=R62.pays and R62.rang=(R61.rang-1))
+ 40  		union
+ 41  	select *
+ 42  		from (
+ 43  			select R51.numc, R51.rang, R51.datedep, R51.pays, sum(R52.nbJours) as nbj
+ 44  				from R5 R51 join R5 R52 on (R51.numc=R52.numc and R51.dateDep=R52.dateDep and R51.rang>R52.rang)
+ 45  				group by R51.numc, R51.rang, R51.datedep, R51.pays
+ 46  				union
+ 47  			select *
+ 48  				from R5
+ 49  				where rang=0
+ 50  				order by numc, datedep, rang)
+ 51  		where rang=0
+ 52  		order by numc, datedep, rang;
+
+      NUMC       RANG DATEDEP   PAYS                        NBJ                 
+---------- ---------- --------- -------------------- ----------                 
+         1          0 04-JAN-10 France                        0                 
+         1          1 04-JAN-10 Angleterre                    0                 
+         1          2 04-JAN-10 France                        2                 
+         1          0 04-FEB-10 France                        0                 
+         1          1 04-FEB-10 Angleterre                    0                 
+         1          2 04-FEB-10 France                        2                 
+         1          0 06-FEB-10 France                        0                 
+         1          1 06-FEB-10 Angleterre                    0                 
+         1          2 06-FEB-10 France                        2                 
+         1          0 21-JUL-10 France                        0                 
+         1          1 21-JUL-10 Angleterre                    0                 
+
+      NUMC       RANG DATEDEP   PAYS                        NBJ                 
+---------- ---------- --------- -------------------- ----------                 
+         1          2 21-JUL-10 France                        2                 
+         1          0 24-JUL-10 France                        0                 
+         1          1 24-JUL-10 Angleterre                    0                 
+         1          2 24-JUL-10 France                        2                 
+         2          0 06-JAN-10 France                        0                 
+         2          1 06-JAN-10 Angleterre                    0                 
+         2          2 06-JAN-10 France                        2                 
+         2          0 07-JAN-10 France                        0                 
+         2          1 07-JAN-10 Angleterre                    0                 
+         2          2 07-JAN-10 France                        2                 
+         2          0 05-FEB-10 France                        0                 
+
+      NUMC       RANG DATEDEP   PAYS                        NBJ                 
+---------- ---------- --------- -------------------- ----------                 
+         2          1 05-FEB-10 Angleterre                    0                 
+         2          2 05-FEB-10 France                        2                 
+         2          0 06-FEB-10 France                        0                 
+         2          1 06-FEB-10 Angleterre                    0                 
+         2          2 06-FEB-10 France                        2                 
+         2          0 05-SEP-10 France                        0                 
+         2          1 05-SEP-10 Angleterre                    0                 
+         2          2 05-SEP-10 France                        2                 
+         3          0 24-DEC-09 France                        0                 
+         3          1 24-DEC-09 Hollande                      0                 
+         3          2 24-DEC-09 France                        3                 
+
+      NUMC       RANG DATEDEP   PAYS                        NBJ                 
+---------- ---------- --------- -------------------- ----------                 
+         3          0 31-DEC-09 France                        0                 
+         3          1 31-DEC-09 Hollande                      0                 
+         3          2 31-DEC-09 France                        3                 
+         3          0 03-JUL-10 France                        0                 
+         3          1 03-JUL-10 Hollande                      0                 
+         3          2 03-JUL-10 France                        3                 
+         4          0 30-JUN-10 France                        0                 
+         4          1 30-JUN-10 Hollande                      0                 
+         4          2 30-JUN-10 France                        4                 
+         4          0 06-AUG-10 France                        0                 
+         4          1 06-AUG-10 Hollande                      0                 
+
+      NUMC       RANG DATEDEP   PAYS                        NBJ                 
+---------- ---------- --------- -------------------- ----------                 
+         4          2 06-AUG-10 France                        4                 
+         4          0 31-AUG-10 France                        0                 
+         4          1 31-AUG-10 Hollande                      0                 
+         4          2 31-AUG-10 France                        4                 
+         4          0 06-NOV-10 France                        0                 
+         4          1 06-NOV-10 Hollande                      0                 
+         4          2 06-NOV-10 France                        4                 
+         5          0 31-AUG-10 France                        0                 
+         5          1 31-AUG-10 Italie                        0                 
+         5          2 31-AUG-10 France                        5                 
+         5          0 06-NOV-10 France                        0                 
+
+      NUMC       RANG DATEDEP   PAYS                        NBJ                 
+---------- ---------- --------- -------------------- ----------                 
+         5          1 06-NOV-10 Italie                        0                 
+         5          2 06-NOV-10 France                        5                 
+         6          0 06-FEB-10 France                        0                 
+         6          1 06-FEB-10 Italie                        0                 
+         6          2 06-FEB-10 France                        4                 
+         6          0 06-SEP-10 France                        0                 
+         6          1 06-SEP-10 Italie                        0                 
+         6          2 06-SEP-10 France                        4                 
+         6          0 06-OCT-10 France                        0                 
+         6          1 06-OCT-10 Italie                        0                 
+         6          2 06-OCT-10 France                        4                 
+
+      NUMC       RANG DATEDEP   PAYS                        NBJ                 
+---------- ---------- --------- -------------------- ----------                 
+         6          0 16-NOV-10 France                        0                 
+         6          1 16-NOV-10 Italie                        0                 
+         6          2 16-NOV-10 France                        4                 
+         7          0 16-DEC-09 France                        0                 
+         7          0 06-JAN-10 France                        0                 
+         7          0 26-FEB-10 France                        0                 
+         7          0 31-AUG-10 France                        0                 
+         7          0 31-OCT-10 France                        0                 
+         8          0 24-DEC-09 France                        0                 
+         8          0 31-DEC-09 France                        0                 
+         8          0 14-FEB-10 France                        0                 
+
+      NUMC       RANG DATEDEP   PAYS                        NBJ                 
+---------- ---------- --------- -------------------- ----------                 
+         8          0 16-FEB-10 France                        0                 
+         8          0 21-FEB-10 France                        0                 
+         8          0 28-FEB-10 France                        0                 
+         8          0 26-APR-10 France                        0                 
+         8          0 16-MAY-10 France                        0                 
+         8          0 21-JUL-10 France                        0                 
+         8          0 31-AUG-10 France                        0                 
+         8          0 14-NOV-10 France                        0                 
+         9          0 06-FEB-10 France                        0                 
+         9          1 06-FEB-10 Angleterre                    0                 
+         9          7 06-FEB-10 France                        8                 
+
+      NUMC       RANG DATEDEP   PAYS                        NBJ                 
+---------- ---------- --------- -------------------- ----------                 
+         9          0 30-OCT-10 France                        0                 
+         9          1 30-OCT-10 Angleterre                    0                 
+         9          7 30-OCT-10 France                        8                 
+        10          0 01-JAN-10 Irlande                       0                 
+        10          0 21-JAN-10 Irlande                       0                 
+        10          0 11-FEB-10 Irlande                       0                 
+        10          0 28-FEB-10 Irlande                       0                 
+        11          0 06-FEB-10 Irlande                       0                 
+        11          0 28-FEB-10 Irlande                       0                 
+        11          0 29-MAY-10 Irlande                       0                 
+        11          0 30-JUN-10 Irlande                       0                 
+
+      NUMC       RANG DATEDEP   PAYS                        NBJ                 
+---------- ---------- --------- -------------------- ----------                 
+        12          0 06-FEB-10 Irlande                       0                 
+        13          0 31-DEC-09 France                        0                 
+        13          1 31-DEC-09 Danemark                      0                 
+        13          2 31-DEC-09 Groenland                     4                 
+        13          9 31-DEC-09 France                       18                 
+        13          0 01-JAN-10 France                        0                 
+        13          1 01-JAN-10 Danemark                      0                 
+        13          2 01-JAN-10 Groenland                     4                 
+        13          9 01-JAN-10 France                       18                 
+        13          0 06-FEB-10 France                        0                 
+        13          1 06-FEB-10 Danemark                      0                 
+
+      NUMC       RANG DATEDEP   PAYS                        NBJ                 
+---------- ---------- --------- -------------------- ----------                 
+        13          2 06-FEB-10 Groenland                     4                 
+        13          9 06-FEB-10 France                       18                 
+        13          0 30-APR-10 France                        0                 
+        13          1 30-APR-10 Danemark                      0                 
+        13          2 30-APR-10 Groenland                     4                 
+        13          9 30-APR-10 France                       18                 
+        13          0 06-MAY-10 France                        0                 
+        13          1 06-MAY-10 Danemark                      0                 
+        13          2 06-MAY-10 Groenland                     4                 
+        13          9 06-MAY-10 France                       18                 
+        13          0 31-MAY-10 France                        0                 
+
+      NUMC       RANG DATEDEP   PAYS                        NBJ                 
+---------- ---------- --------- -------------------- ----------                 
+        13          1 31-MAY-10 Danemark                      0                 
+        13          2 31-MAY-10 Groenland                     4                 
+        13          9 31-MAY-10 France                       18                 
+        13          0 30-JUN-10 France                        0                 
+        13          1 30-JUN-10 Danemark                      0                 
+        13          2 30-JUN-10 Groenland                     4                 
+        13          9 30-JUN-10 France                       18                 
+        13          0 31-DEC-10 France                        0                 
+        13          1 31-DEC-10 Danemark                      0                 
+        13          2 31-DEC-10 Groenland                     4                 
+        13          9 31-DEC-10 France                       18                 
+
+      NUMC       RANG DATEDEP   PAYS                        NBJ                 
+---------- ---------- --------- -------------------- ----------                 
+        14          0 06-JUL-10 Islande                       0                 
+        14          0 26-JUL-10 Islande                       0                 
+        15          0 06-FEB-10 France                        0                 
+        15          1 06-FEB-10 Islande                       0                 
+        15          5 06-FEB-10 France                        8                 
+        15          0 31-AUG-10 France                        0                 
+        15          1 31-AUG-10 Islande                       0                 
+        15          5 31-AUG-10 France                        8                 
+        16          0 06-JAN-10 France                        0                 
+        16          1 06-JAN-10 Finlande                      0                 
+        16          2 06-JAN-10 Norvege                       2                 
+
+      NUMC       RANG DATEDEP   PAYS                        NBJ                 
+---------- ---------- --------- -------------------- ----------                 
+        16          9 06-JAN-10 France                       10                 
+        16          0 06-FEB-10 France                        0                 
+        16          1 06-FEB-10 Finlande                      0                 
+        16          2 06-FEB-10 Norvege                       2                 
+        16          9 06-FEB-10 France                       10                 
+        16          0 31-AUG-10 France                        0                 
+        16          1 31-AUG-10 Finlande                      0                 
+        16          2 31-AUG-10 Norvege                       2                 
+        16          9 31-AUG-10 France                       10                 
+        17          0 06-FEB-10 Portugal                      0                 
+        17          0 16-FEB-10 Portugal                      0                 
+
+      NUMC       RANG DATEDEP   PAYS                        NBJ                 
+---------- ---------- --------- -------------------- ----------                 
+        17          0 26-FEB-10 Portugal                      0                 
+        17          0 31-DEC-10 Portugal                      0                 
+        18          0 30-APR-10 France                        0                 
+        18          1 30-APR-10 Italie                        0                 
+        18          6 30-APR-10 France                       12                 
+        18          0 30-JUL-10 France                        0                 
+        18          1 30-JUL-10 Italie                        0                 
+        18          6 30-JUL-10 France                       12                 
+        18          0 06-OCT-10 France                        0                 
+        18          1 06-OCT-10 Italie                        0                 
+        18          6 06-OCT-10 France                       12                 
+
+      NUMC       RANG DATEDEP   PAYS                        NBJ                 
+---------- ---------- --------- -------------------- ----------                 
+        18          0 06-DEC-10 France                        0                 
+        18          1 06-DEC-10 Italie                        0                 
+        18          6 06-DEC-10 France                       12                 
+        19          0 06-FEB-10 Italie                        0                 
+        19          0 15-APR-10 Italie                        0                 
+        19          0 05-AUG-10 Italie                        0                 
+        19          0 06-SEP-10 Italie                        0                 
+        19          0 16-SEP-10 Italie                        0                 
+        19          0 10-DEC-10 Italie                        0                 
+        19          0 20-DEC-10 Italie                        0                 
+        20          0 22-DEC-09 France                        0                 
+
+      NUMC       RANG DATEDEP   PAYS                        NBJ                 
+---------- ---------- --------- -------------------- ----------                 
+        20          0 20-JAN-10 France                        0                 
+        20          0 27-JAN-10 France                        0                 
+        20          0 02-FEB-10 France                        0                 
+        20          0 06-FEB-10 France                        0                 
+        20          0 01-APR-10 France                        0                 
+        20          0 03-APR-10 France                        0                 
+        21          0 15-JAN-10 France                        0                 
+        21          1 15-JAN-10 Finlande                      0                 
+        21          2 15-JAN-10 Norvege                       2                 
+        21          9 15-JAN-10 Italie                       10                 
+        21          0 25-JAN-10 France                        0                 
+
+      NUMC       RANG DATEDEP   PAYS                        NBJ                 
+---------- ---------- --------- -------------------- ----------                 
+        21          1 25-JAN-10 Finlande                      0                 
+        21          2 25-JAN-10 Norvege                       2                 
+        21          9 25-JAN-10 Italie                       10                 
+        21          0 26-FEB-10 France                        0                 
+        21          1 26-FEB-10 Finlande                      0                 
+        21          2 26-FEB-10 Norvege                       2                 
+        21          9 26-FEB-10 Italie                       10                 
+        21          0 06-APR-10 France                        0                 
+        21          1 06-APR-10 Finlande                      0                 
+        21          2 06-APR-10 Norvege                       2                 
+        21          9 06-APR-10 Italie                       10                 
+
+198 rows selected.
+
+SQL> spool off
