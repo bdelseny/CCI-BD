@@ -306,5 +306,3 @@ SQL> with R5 as (
         21 06-APR-10 Italie               16-APR-10                             
 
 198 rows selected.
-
-SQL> spool off
